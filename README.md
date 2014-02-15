@@ -39,7 +39,7 @@ Installation
  - pack the content of the firefox_extension/custom-toolbar-button@example.com to a zip, change the extension zip to xpi and import the extension in your firefox
  - checkout the https://github.com/panique/php-login-advanced in the subfolder php-login-advanced
  - follow the instructions here but skip the sql scripts https://github.com/panique/php-login-advanced#installation-quick-setup
- - you need to touch to files php-login-advanced folder to get this working
+ - you need to touch two files in the php-login-advanced folder to get this working
 
 
  **php-login-advanced/index.php**
@@ -64,3 +64,11 @@ Installation
 > $this->user_email = $_SESSION['user_email'];
 
 > **$this->user_id = $_SESSION['user_id'];**
+
+additionally add this function
+
+> public function getUserid(){
+
+> return $this->user_id;
+
+> }
