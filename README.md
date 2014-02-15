@@ -41,22 +41,26 @@ Installation
  - follow the instructions here but skip the sql scripts https://github.com/panique/php-login-advanced#installation-quick-setup
  - you need to touch to files php-login-advanced folder to get this working
 
-1. php-login-advanced/index.php
-...
-if ($login->isUserLoggedIn() == true) {
-    // the user is logged in. you can do whatever you want here.
-    // for demonstration purposes, we simply show the "you are logged in" view.
-    **header('Location: http://localhost/reMARK/index.php');**
 
-} else {
-...
+ **php-login-advanced/index.php**
 
-2. php-login-advanced/classes/Login.php
-...
-private function loginWithSessionData()
-    {
-        $this->user_name = $_SESSION['user_name'];
-        $this->user_email = $_SESSION['user_email'];
-        **$this->user_id = $_SESSION['user_id'];**
+> if ($login->isUserLoggedIn() == true) {
 
-...
+> // the user is logged in. you can do whatever you want here.
+
+> // for demonstration purposes, we simply show the "you are logged in" view.
+
+> **header('Location: http://localhost/reMARK/index.php');**
+
+> } else {
+
+
+ **php-login-advanced/classes/Login.php**
+
+> private function loginWithSessionData(){
+
+> $this->user_name = $_SESSION['user_name'];
+
+> $this->user_email = $_SESSION['user_email'];
+
+> **$this->user_id = $_SESSION['user_id'];**
