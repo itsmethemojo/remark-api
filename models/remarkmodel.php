@@ -102,7 +102,7 @@ class RemarkModel extends Model
 		return $url;
 	}
 
-	function getIdByUrl($userid,$url){	
+	private function getIdByUrl($userid,$url){	
 		$normalizedUrl = $this->normalizeUrl($url);
 		$query = "SELECT id FROM bookmark WHERE url = ? AND user_id = ?";
 
@@ -117,7 +117,7 @@ class RemarkModel extends Model
 		return $id;
 	}
 
-	function saveBookmark($userid,$url,$title){
+	private function saveBookmark($userid,$url,$title){
 		$normalizedUrl = $this->normalizeUrl($url);
 		$timeStamp = time();
 		$urlArray = parse_url($url);
@@ -153,7 +153,7 @@ class RemarkModel extends Model
 		return $id;
 	}
 
-	function saveReBookmark($userid,$id){
+	private function saveReBookmark($userid,$id){
 		$timeStamp = time();
 		
 		// write in bookmarktime table
@@ -185,12 +185,12 @@ class RemarkModel extends Model
 		return 2;
 	}
 
-	function normalizeUrl($url){
+	private function normalizeUrl($url){
 		//TODO implement cutting last / and/or other stuff
 		return $url;
 	}
 
-	function calculateRemarkVisibilityClass($number){
+	private function calculateRemarkVisibilityClass($number){
 		switch($number) {
 			 case 0: return 0;
 			 case 1: return 1;
@@ -201,7 +201,7 @@ class RemarkModel extends Model
 		return 8;
 	}
 
-	function calculateClickVisibilityClass($number){
+	private function calculateClickVisibilityClass($number){
 		switch($number) {
 			 case 0: return 0;
 			 case 1: return 1;
@@ -220,7 +220,7 @@ class RemarkModel extends Model
 		return 8;
 	}
 
-	function getMediaType($extension,$domain){
+	private function getMediaType($extension,$domain){
 		//mediatypes
 		$probablyHTML = 1;
 		$image = 2;
