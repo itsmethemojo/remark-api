@@ -7,7 +7,6 @@
  * standardized auto-loader https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, so we do:
  */
 function autoload($class) {
-    error_log("bla ".$class);
     // if file does not exist in LIBS_PATH folder [set it in config/config.php]
     if (file_exists(LIBS_PATH . $class . ".php")) {
         require LIBS_PATH . $class . ".php";

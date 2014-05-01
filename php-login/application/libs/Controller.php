@@ -38,9 +38,7 @@ class Controller
     {
         $path = MODELS_PATH . strtolower($name) . '_model.php';
 
-        error_log("bla ".$path);
         if (file_exists($path)) {
-        error_log("blub ".$path);
             require MODELS_PATH . strtolower($name) . '_model.php';
             // The "Model" has a capital letter as this is the second part of the model class name,
             // all models have names like "LoginModel"
