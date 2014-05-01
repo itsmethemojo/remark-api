@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8" />
         <title><?php echo $title; ?></title>
-			<link rel="stylesheet" type="text/css" href="style/main.css">
+			<link rel="stylesheet" type="text/css" href="src/style/remark.css">
 			<link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon">
     </head>
     <body>

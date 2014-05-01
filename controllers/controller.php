@@ -8,13 +8,10 @@ class Controller
 	protected $_view;
 	protected $_modelBaseName;
 	
-	public function __construct($model, $action)
+	public function __construct($model)
 	{
 		$this->_controller = ucwords(__CLASS__);
-		$this->_action = $action;
 		$this->_modelBaseName = $model;
-		
-		$this->_view = new View(HOME . DS . 'views' . DS . strtolower($this->_modelBaseName) . DS . $action . '.tpl');
 	}
 	
 	protected function _setModel($modelName)

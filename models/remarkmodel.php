@@ -33,15 +33,15 @@ class RemarkModel extends Model
 		if ($stmt = mysqli_prepare($this->dbLink, $query)) {
 			mysqli_stmt_bind_param($stmt, "s", $userid);
 			mysqli_stmt_execute($stmt);
-			
+			$helper = new FrontendCalculations();
 		
 			$result = $stmt->get_result();
 			while ($row = $result->fetch_array(MYSQLI_ASSOC)){
 				$entries[$counter]=$row;
 
 				//add some additional data for display
-				$entries[$counter]['clickclass'] = $this->calculateClickVisibilityClass($entries[$counter]['clickcount']);
-				$entries[$counter]['remarkclass'] = $this->calculateRemarkVisibilityClass($entries[$counter]['bookmarkcount']);
+				$entries[$counter]['clickclass'] = $helper->calculateClickVisibilityClass($entries[$counter]['clickcount']);
+				$entries[$counter]['remarkclass'] = $helper->calculateRemarkVisibilityClass($entries[$counter]['bookmarkcount']);
 				if($entries[$counter]['customtitle']!=""){
 					$entries[$counter]['title']=$entries[$counter]['customtitle'];
 				}
@@ -176,11 +176,13 @@ class RemarkModel extends Model
 	public function bookmark($userid,$url,$title){
 		$bookmarkid = $this->getIdByUrl($userid,$url);
 		if($bookmarkid){
-			if($this->saveReBookmark($userid,$bookmarkid))
+			if($this->saveReBookmark($userid,$bookmarkid)){
 				return 1;
+                        }
 		}else{
-			if($this->saveBookmark($userid,$url,$title))
+			if($this->saveBookmark($userid,$url,$title)){
 				return 0;
+                        }
 		}
 		return 2;
 	}
@@ -190,60 +192,4 @@ class RemarkModel extends Model
 		return $url;
 	}
 
-	private function calculateRemarkVisibilityClass($number){
-		switch($number) {
-			 case 0: return 0;
-			 case 1: return 1;
-			 case 2: return 2;
-			 case 3: return 4;
-			 case 4: return 6;
-		}
-		return 8;
-	}
-
-	private function calculateClickVisibilityClass($number){
-		switch($number) {
-			 case 0: return 0;
-			 case 1: return 1;
-			 case 2: return 2;
-			 case 3: return 3;
-		}
-		if($number<=6)
-			return 4;
-		if($number<=10)
-			return 5;
-		if($number<=15)
-			return 6;
-		if($number<=20)
-			return 7;
-
-		return 8;
-	}
-
-	private function getMediaType($extension,$domain){
-		//mediatypes
-		$probablyHTML = 1;
-		$image = 2;
-		$video = 3;
-		$music = 4;
-		switch($extension){
-			case ("jpg"): return $image;
-			case ("jpeg"): return $image;
-			case ("gif"): return $image;
-			case ("png"): return $image;
-		}
-		
-		switch($domain){
-			case ("www.youtube.com"): return $video;
-			case ("www.youtube.de"): return $video;
-			case ("www.vevo.com"): return $video;
-			case ("vimeo.com"): return $video;
-			case ("www.myvideo.de"): return $video;
-			
-			case ("soundcloud.com"): return $music;
-			
-		}
-		
-		return $probablyHTML;
-	}
 }

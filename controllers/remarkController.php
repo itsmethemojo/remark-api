@@ -2,10 +2,10 @@
 
 class RemarkController extends Controller
 {
-	public function __construct($model, $action)
+	public function __construct($model)
 	{
 
-		parent::__construct($model, $action);
+		parent::__construct($model);
 		$this->_setModel($model);
 	}
 	
@@ -14,6 +14,7 @@ class RemarkController extends Controller
 		try {
 			
 			$items = $this->_model->getUnfilteredList($userid);
+                        $this->_setView("unfilteredlist");
 			$this->_view->set('items', $items);
 			$this->_view->set('title', 'reMARK');
 			return $this->_view->output();
@@ -28,6 +29,7 @@ class RemarkController extends Controller
 		try {
 			
 			$url = $this->_model->trackClick($userid,$bookmarkid);
+                        $this->_setView("openlink");
 			$this->_view->set('url', $url);
 			return $this->_view->output();
 			
@@ -40,7 +42,8 @@ class RemarkController extends Controller
 	{
 		try {
 			
-			$id = $this->_model->bookmark($userid,$url,$title);	
+			$id = $this->_model->bookmark($userid,$url,$title);
+                        $this->_setView("saverequest");
 			$this->_view->set('id', $id);
 			return $this->_view->output();
 			

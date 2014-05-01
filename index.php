@@ -2,18 +2,16 @@
 
 // check if logged in
 
-require_once('php-login-advanced/config/config.php');
-require_once('php-login-advanced/translations/en.php');
-require_once('php-login-advanced/libraries/PHPMailer.php');
-require_once('php-login-advanced/classes/Login.php');
-$login = new Login();
+require_once('php-login/application/libs/Session.php');
 
-if ($login->isUserLoggedIn() != true) {
-   header( 'Location: http://localhost/reMARK/php-login-advanced/index.php' );
+Session::init();
+
+if (!Session::get('user_logged_in')) {
+   header( 'Location: http://localhost/reMARK/php-login/index.php' );
 	exit;
 }
-
 // logged in, proceed
+$userid = Session::get('user_id');
 
 define ('DS', DIRECTORY_SEPARATOR);
 define ('HOME', dirname(__FILE__));
@@ -22,15 +20,16 @@ ini_set ('display_errors', 1);
 
 require_once('utilities/loadfiles.php');
 
-if(isset($_GET['openid'])){
-	$remark = new RemarkController("remark", "openlink");
-	$remark->trackClick($login->getUserid(),$_GET['openid']);
-}
-elseif(isset($_POST['remark'])){
-	$remark = new RemarkController("remark", "saverequest");
-	$remark->bookmark($login->getUserid(),$_POST['url'],$_POST['title']);
+if(!isset($_GET['app'])){
+    $app = "remark"; 
 }
 else{
-	$remark = new RemarkController("remark", "unfilteredlist");
-	$remark->unfilteredList($login->getUserid());
+    $app = $_GET['app'];
+}
+
+if (file_exists('includes/'.$app.'.php')) {
+    require 'includes/'.$app.'.php';
+}
+else{
+    echo 'no such application';
 }
