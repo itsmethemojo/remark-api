@@ -7,3 +7,4 @@ config/define.php
 /nbproject/
 
 /php-login/
+!/php-login/.htaccess
