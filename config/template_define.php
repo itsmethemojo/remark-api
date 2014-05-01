@@ -1,3 +1,3 @@
 <?php
-define('URL', 'http://localhost/reMARK/');
+define('ROOT_URL', 'http://localhost/reMARK/');
 ?>
