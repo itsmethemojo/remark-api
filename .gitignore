@@ -5,4 +5,5 @@ firefox_extension/custom-toolbar-button@example.com/chrome/button.js
 *~
 config/define.php
 /nbproject/
-
+/php-login/
+!/php-login/.htaccess
