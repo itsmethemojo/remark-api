@@ -8,7 +8,7 @@ require_once('php-login/application/libs/Session.php');
 Session::init();
 
 if (!Session::get('user_logged_in')) {
-   header( 'Location: '.ROOT_URL.'php-login/index.php' );
+   header( 'Location: '.ROOT_URL.'php-login/login/index' );
 	exit;
 }
 // logged in, proceed
