@@ -49,13 +49,13 @@ function printLine(nr,text,date,type){
     output+= '<img class="arrow down" src="img/arrow_20x20.png">';
     output+= '</a> ';
     
-    if(type==0){
-        output+= '<a href="javascript:moveLeft('+nr+')">';
-    output+= '<img class="arrow left" src="img/arrow_20x20.png">';
+    if(type==2){
+        output+= '<a href="javascript:moveRight('+nr+')">';
+        output+= '<img class="arrow right" src="img/arrow_20x20.png">';
     }
     else{
-        output+= '<a href="javascript:moveRight('+nr+')">';
-    output+= '<img class="arrow right" src="img/arrow_20x20.png">';
+        output+= '<a href="javascript:moveLeft('+nr+')">';
+        output+= '<img class="arrow left" src="img/arrow_20x20.png">';
     }
     
     output+= '</a> ';
@@ -65,9 +65,14 @@ function printLine(nr,text,date,type){
     output+= '<img class="buttonImage" src="img/delete_20x20.png">';
     output+= '</a> ';
     
+    
+    output+= '<a href="javascript:toggleLine('+nr+')">';
+    output+= '<img class="buttonImage" src="img/line_20x20.png">';
+    output+= '</a> ';
+    
     output+= '</div>';
     output+= '<div class="headline">';
-    if(type!=0){
+    if(type==2){
         output+= '<input class="inactive" type="text" onblur="writeData('+nr+',this.value,\'text\')" value="'+text+'" id="text_'+nr+'" name="text_'+nr+'">';
         output+= '<div class="content" id="show_text_'+nr+'" onclick="activate(\'text_'+nr+'\')"><b>'+text+'</b></div>';
       
@@ -77,14 +82,14 @@ function printLine(nr,text,date,type){
     }
     output+= '</div>';
     output+= '<div class="item">';
-    if(type==0){
+    if(type!=2){
         output+= '<input class="inactive" type="text" onblur="writeData('+nr+',this.value,\'text\')" value="'+text+'" id="text_'+nr+'" name="text_'+nr+'">';
         output+= '<div class="content" id="show_text_'+nr+'" onclick="activate(\'text_'+nr+'\')">';
-        if(text==""){
-            output+= "&nbsp;"
+        if(type==1){
+            output+= "<s>" + text + "&nbsp;</s>";
         }
         else{
-            output+= text;
+            output+= text + "&nbsp;";
         }
         output+='</div>';
       
@@ -94,15 +99,16 @@ function printLine(nr,text,date,type){
     }
     output+= '</div>';
     output+= '<div class="date">';
-    if(type==0){
+    if(type!=2){
         output+= '<input class="inactive" type="text" onblur="writeData('+nr+',this.value,\'date\')" value="'+date+'" id="date_'+nr+'" name="date_'+nr+'">';
         output+= '<div class="content" id="show_date_'+nr+'" onclick="activate(\'date_'+nr+'\')">';
-        if(date==""){
-            output+= "&nbsp;"
+        if(type==1){
+            output+= "<s>" + date + "&nbsp;</s>";
         }
         else{
-            output+= date;
+            output+= date + "&nbsp;";
         }
+        
         output+='</div>';
       
     }
@@ -200,11 +206,21 @@ function moveRight(nr){
 }
 
 function moveLeft(nr){
-    todos[nr]["type"]=1;
+    todos[nr]["type"]=2;
     printList();
 }
 
 function addFirstLine(){
     todos[0] =  {"text": "start here", "date": "", "type": 0};
+    printList();
+}
+
+function toggleLine(nr){
+    if(todos[nr]["type"]==1){
+        todos[nr]["type"]=0;
+    }
+    else{
+        todos[nr]["type"]=1;
+    }
     printList();
 }
