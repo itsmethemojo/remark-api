@@ -1,12 +1,13 @@
-reMARK
-======
+reMARK v0.2
+===========
 
 simple bookmarking Tool consisting of a webpage (php,mysql) and a firefox extension
 
 Bookmarking is easy. The maintenance of the own bookmark library is the pain in the ass. So why not just let the bookmarks sort themselves. This bookmark tool counts the times a site was bookmarked by you. So if you don't know if this site is already in your library, just bookmark it (again maybe). Same Situation with the clicks on the bookmarked sites. And over the time your important bookmarks will stand out clearly without you wasting your time creating any lists.
 
-i used the php-login-advanced for authentification https://github.com/panique/php-login-advanced
-therefore see the installation instructions
+Used as a everyday tool, I thought it might be interesting to add some self managing features, i have never found the correct software/apps for. I am currently thinking about a todo list, contacts/birtdays and reminders. Maybe a notification bar System and/or email notification. Let's see.
+
+I used the php-login for authentification https://github.com/panique/php-login
 
 The firefox extension is a really ugly adaption of a tutorial I found. Maybe there is someone out there who understands and likes the fundamental priciples of a firefox extensions enough to help me out with that. ;)
 
@@ -20,55 +21,34 @@ I already wrote a version with more features, but I decided to refactor it. So h
  - count remarks/clicks
  - installation instructions
 
+v0.2
+====
+
+ - changed login application to the newest php-login https://github.com/panique/php-login
+ - added a todo list feature
+ - refactored installation process and added new install instructions
+ 
+
 coming Up
 =========
  
- - system requirements catalog
  - database access refactoring
  - editing bookmarks
  - tagging
  - filter/sort list
  - individual statistics
+ - birtdays timeline / contact list
+ - simple reminders/events
+ - notification bar
 
-Installation
+installation
 ============
 
- - use the database.sql to create (database and) tables
- - modify the config/template_db.php and save it as db.php
+ - delete the "template_" from the files in the config folder and modify the content
+ - run all the sql scripts in the _installation directory
  - modify the firefox_extension/custom-toolbar-button@example.com/chrome/template_button.js and save it as button.js
  - pack the content of the firefox_extension/custom-toolbar-button@example.com to a zip, change the extension zip to xpi and import the extension in your firefox
- - checkout the https://github.com/panique/php-login-advanced in the subfolder php-login-advanced
- - follow the instructions here but skip the sql scripts https://github.com/panique/php-login-advanced#installation-quick-setup
- - you need to touch two files in the php-login-advanced folder to get this working
-
-
- **php-login-advanced/index.php**
-
-> if ($login->isUserLoggedIn() == true) {
-
-> // the user is logged in. you can do whatever you want here.
-
-> // for demonstration purposes, we simply show the "you are logged in" view.
-
-> **header('Location: http://localhost/reMARK/index.php');**
-
-> } else {
-
-
- **php-login-advanced/classes/Login.php**
-
-> private function loginWithSessionData(){
-
-> $this->user_name = $_SESSION['user_name'];
-
-> $this->user_email = $_SESSION['user_email'];
-
-> **$this->user_id = $_SESSION['user_id'];**
-
-additionally add this function
-
-> public function getUserid(){
-
-> return $this->user_id;
-
-> }
+ - delete the php-login folder
+ - make sure you have composer installed (howto http://www.dev-metal.com/install-update-composer-windows-7-ubuntu-debian-centos/)
+ - run sudo composer create-project panique/php-login [YOUR_PATH]/reMARK/php-login dev-master (howto http://www.dev-metal.com/install-php-login-nets-4-full-mvc-framework-login-script-ubuntu/)
+ - checkout the php-login folder again and overwrite the files
