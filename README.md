@@ -1,7 +1,7 @@
 reMARK v0.2
 ===========
 
-simple bookmarking Tool consisting of a webpage (php,mysql) and a firefox extension
+simple bookmarking tool consisting of a webpage (php,mysql) and a firefox extension
 
 Bookmarking is easy. The maintenance of the own bookmark library is the pain in the ass. So why not just let the bookmarks sort themselves. This bookmark tool counts the times a site was bookmarked by you. So if you don't know if this site is already in your library, just bookmark it (again maybe). Same Situation with the clicks on the bookmarked sites. And over the time your important bookmarks will stand out clearly without you wasting your time creating any lists.
 
@@ -29,7 +29,7 @@ v0.2
  - refactored installation process and added new install instructions
  
 
-coming Up
+coming up
 =========
  
  - database access refactoring
