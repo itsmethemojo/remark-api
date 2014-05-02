@@ -123,7 +123,8 @@ class RemarkModel extends Model
 		$urlArray = parse_url($url);
 		$domain = isset($urlArray['host']) ? $urlArray['host'] : "";
 		$extension = isset($urlArray['path']) ? pathinfo($urlArray['path'], PATHINFO_EXTENSION) : "";
-		$mediatype = $this->getMediaType($extension,$domain);
+                $helper = new FrontendCalculations();
+		$mediatype = $helper->getMediaType($extension,$domain);
 		
 		// write in bookmark table
 		$query = "INSERT INTO bookmark (url, title, user_id, domain, extension, mediatype, created, updated) VALUES (?,?,?,?,?,?,?,?)";

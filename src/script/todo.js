@@ -174,6 +174,10 @@ function addLine(nr){
     //todos = new Array();
     todos = newTodos;
     printList();
+    
+    document.getElementById('show_text_'+(nr+1)).className = "inactive";
+    document.getElementById('text_'+(nr+1)).className = "active";
+    document.getElementById('text_'+(nr+1)).focus()
 }
 
 function removeLine(nr){
