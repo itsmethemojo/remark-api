@@ -16,7 +16,7 @@ class TodoController extends Controller
 			$json = $this->_model->getData($userid);
                         $this->_setView("list");
 			$this->_view->set('json', $json);
-			$this->_view->set('title', 'TODO');
+			$this->_view->set('title', 'todo list');
 			return $this->_view->output();
 			
 		} catch (Exception $e) {
@@ -30,7 +30,7 @@ class TodoController extends Controller
 			$json = $this->_model->saveData($userid,$json);
                         $this->_setView("redirect");
 			$this->_view->set('json', $json);
-			$this->_view->set('title', 'TODO');
+			$this->_view->set('title', 'todo list');
 			return $this->_view->output();
 			
 		} catch (Exception $e) {

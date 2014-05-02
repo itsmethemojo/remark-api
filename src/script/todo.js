@@ -28,6 +28,9 @@ function printList(){
     if(todos.length==0){
         output+= '<a href="javascript:addFirstLine()">start List</a> ';
     }
+    if(archiv.length>todos.length){
+        savebuttonclass = "active";
+    }
     document.getElementById("data").value=JSON.stringify(todos).replace("&nbsp;","");
     document.getElementById("container").innerHTML =output;
     document.getElementById("save").className = savebuttonclass;
@@ -59,14 +62,14 @@ function printLine(nr,text,date,type){
     
     
     output+= '<a href="javascript:removeLine('+nr+')">';
-    output+= '<img src="img/delete_20x20.png">';
+    output+= '<img class="buttonImage" src="img/delete_20x20.png">';
     output+= '</a> ';
     
     output+= '</div>';
     output+= '<div class="headline">';
     if(type!=0){
         output+= '<input class="inactive" type="text" onblur="writeData('+nr+',this.value,\'text\')" value="'+text+'" id="text_'+nr+'" name="text_'+nr+'">';
-        output+= '<div class="content" id="show_text_'+nr+'" onclick="activate(\'text_'+nr+'\')">'+text+'</div>';
+        output+= '<div class="content" id="show_text_'+nr+'" onclick="activate(\'text_'+nr+'\')"><b>'+text+'</b></div>';
       
     }
     else{

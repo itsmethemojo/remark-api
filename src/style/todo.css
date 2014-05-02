@@ -1,3 +1,7 @@
+body{
+        font-family:Arial,Helvetica,sans-serif;
+}
+
 .active{
     display:show;
 }
@@ -28,6 +32,8 @@ div.headline{
     width:200px;
     text-align:right;
     float:left;
+    font-size:1.5em;
+    color:#6CA0FF;
 }
 
 div.item{
@@ -67,7 +73,12 @@ div.status{
     margin-right: 50px;
 }
 
+.buttonImage{
+    opacity:0.1;
+}
+
 .arrow {
+    opacity:0.1;
 
 }
 
