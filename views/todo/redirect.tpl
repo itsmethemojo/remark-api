@@ -1,1 +1,2 @@
-<?php header( 'Location: http://localhost/reMARK/index.php?app=todo' ); ?>
+
+<?php header( 'Location: '.ROOT_URL.'index.php?app=todo' ); ?>

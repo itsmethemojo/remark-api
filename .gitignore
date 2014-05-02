@@ -8,5 +8,6 @@ config/define.php
 /php-login/
 !/php-login/.htaccess
 !/php-login/application/views/_templates/header.php
+!/php-login/application/views/_templates/footer.php
 !/php-login/application/views/dashboard/index.php
 !/php-login/application/views/index/index.php
