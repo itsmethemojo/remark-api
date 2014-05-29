@@ -2,13 +2,11 @@
 
 class TodoModel extends Model
 {
-	function __construct() {
-            parent::__construct();
+	public function __construct($dbLink) {
+            error_log("Todo Model construct");
+            parent::__construct($dbLink);
 	}
 	
-	function __destruct() {
-            parent::__destruct();
-	}
         
         function getData($userid){
             $query = "SELECT data FROM todo WHERE user_id = ? order by id DESC LIMIT 0,1";

@@ -2,12 +2,9 @@
 
 class RemarkModel extends Model
 {
-	function __construct() {
-		parent::__construct();
-	}
-	
-	function __destruct() {
-		parent::__destruct();
+	public function __construct($dbLink) {
+            error_log("Remark Model construct");
+            parent::__construct($dbLink);
 	}
 
 	// just shows all remarks
