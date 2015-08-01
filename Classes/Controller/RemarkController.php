@@ -11,6 +11,8 @@ class RemarkController extends BaseController{
         $this->css = array();
         $this->css[] = "style/remark.css";
         
+        $this->favicon = "img/favicon.ico";
+        
     }
     
     public function actionComplete(){
