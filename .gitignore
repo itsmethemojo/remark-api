@@ -1,13 +1,3 @@
-
-config/db.php
-img/later/
-firefox_extension/custom-toolbar-button@example.com/chrome/button.js
-*~
-config/define.php
-/nbproject/
-/php-login/
-!/php-login/.htaccess
-!/php-login/application/views/_templates/header.php
-!/php-login/application/views/_templates/footer.php
-!/php-login/application/views/dashboard/index.php
-!/php-login/application/views/index/index.php
+nbproject/
+vendor/
+Configuration/settings.php
