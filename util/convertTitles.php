@@ -1,6 +1,6 @@
 <?php
 
-
+//TODO read credentials from config
 $dbLink = new mysqli("localhost:3306", "root", "root", "remark");
 if ($dbLink->connect_errno) {
     throw new Exception("database mssing?", NULL, NULL);

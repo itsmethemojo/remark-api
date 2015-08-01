@@ -26,7 +26,7 @@ function handleClick(state) {
     remarkRequest = Request({
         url: remarkUrl,
         content: {
-            remark : "1",
+            action : "remark",
             url : currentUrl,
             title : currentTitle
             
