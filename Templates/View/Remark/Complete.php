@@ -14,7 +14,7 @@
 
 <script type="text/javascript">
     t = 1;
-    bookmarks = JSON.parse('<?php echo json_encode($this->par['bookmarks'],TRUE);?>');
+    bookmarks = JSON.parse('<?php echo json_encode($this->par['bookmarks'], JSON_HEX_APOS);?>');
 
     var domainSet = new Set();
     <?php foreach($this->par['bookmarks'] as $bookmark){
