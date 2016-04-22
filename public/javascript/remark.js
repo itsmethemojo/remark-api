@@ -66,6 +66,7 @@ Remark.prototype.listen = function () {
             $.getJSON(postUrl, function () {
                 $thisObject.val("");
                 $thisObject.toggleClass("toggled");
+                self.refresh();
             });
         }
 
