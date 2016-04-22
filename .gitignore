@@ -1,3 +1,4 @@
-nbproject/
-vendor/
-Configuration/settings.php
+/nbproject/
+/vendor/
+/config/
+composer.phar

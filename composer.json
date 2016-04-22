@@ -1,0 +1,26 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Itsmethemojo\\": "src/"
+        }
+    },
+    "repositories": [
+        {
+            "url": "https://github.com/itsmethemojo/utils.git",
+            "type": "git"
+        },
+        {
+            "url": "https://github.com/itsmethemojo/loginWithTwitter.git",
+            "type": "git"
+        }
+    ],
+    "require": {
+        "itsmethemojo/loginWithTwitter": "dev-master",
+        "slim/slim": "^3.0",
+        "akrabat/rka-ip-address-middleware": "^0.4.0",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "2.*"
+    }
+}
