@@ -18,7 +18,7 @@ class Bookmarks
 
     public function __construct($databaseConfigKey = "remark-mysql", $storageConfigKey = "remark-redis")
     {
-        $this->database = new Database($databaseConfigKey,$storageConfigKey);
+        $this->database = new Database($databaseConfigKey, $storageConfigKey);
     }
 
     public function getAll($userId)
@@ -107,10 +107,11 @@ class Bookmarks
 
         $params1 = new QueryParameters();
         $params1
-            ->add($this->getTimestamp())
-            ->add($bookmarkId);
+            ->add($bookmarkId)
+            ->add($userId)
+            ->add($this->getTimestamp());
 
-        $query1 = "UPDATE bookmark SET bookmarkcount =  bookmarkcount + 1, updated = ? WHERE id = ?";
+        $query1 = "INSERT INTO bookmarktime (bookmark_id, user_id, created) VALUES (?,?,?)";
 
         $this->database->modify(
             array('allBookmarkIdsAndUrls', 'allData-' . $userId),
@@ -119,13 +120,26 @@ class Bookmarks
         );
 
         $params2 = new QueryParameters();
-        $params2->add($bookmarkId);
+        $params2
+            ->add($this->getTimestamp())
+            ->add($bookmarkId);
 
-        $query2 = "SELECT bookmarkcount FROM bookmark WHERE id = ?";
-        $result = $this->database->read(
-            array(),
+        $query2 = "UPDATE bookmark SET bookmarkcount =  bookmarkcount + 1, updated = ? WHERE id = ?";
+
+        $this->database->modify(
+            array('allBookmarkIdsAndUrls', 'allData-' . $userId),
             $query2,
             $params2
+        );
+
+        $params3 = new QueryParameters();
+        $params3->add($bookmarkId);
+
+        $query3 = "SELECT bookmarkcount FROM bookmark WHERE id = ?";
+        $result = $this->database->read(
+            array(),
+            $query3,
+            $params3
         );
 
         if (count($result) !== 1) {
@@ -195,7 +209,7 @@ class Bookmarks
             ->add($this->getTimestamp());
 
         $this->database->modify(
-            array('allBookmarkIdsAndUrls'),
+            array('allBookmarkIdsAndUrls', 'allData-' . $userId),
             $query1,
             $params1
         );
