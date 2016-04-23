@@ -5,7 +5,6 @@ function Remark(config) {
 }
 
 Remark.prototype.readConfig = function (config) {
-
     this.apiUrl = config.apiUrl;
     this.containerDivId = config.containerDivId ? "#" + config.containerDivId : '#bookmarks';
     this.filterInputId = config.filterInputId ? "#" + config.filterInputId : '#filter';
@@ -17,6 +16,7 @@ Remark.prototype.readConfig = function (config) {
     this.remarks = $(this.remarkSelectId).val();
     this.clicks = $(this.clickSelectId).val();
     this.bookmarks = localStorage.getObject("bookmarks") || new Array();
+    this.maxCount = this.getUrlParameter("items");
 }
 
 Remark.prototype.listen = function () {
@@ -104,6 +104,9 @@ Remark.prototype.printBookmarks = function () {
     for (var i = 0; i < self.bookmarks.length; i++) {
         if (this.isBookmarkFiltered(self.bookmarks[i], i === 0 ? {"id": null} : self.bookmarks[previousId])) {
             continue;
+        }
+        if(self.maxCount !== null && self.maxCount == bookmarksHtmlCreated){
+            break;
         }
         bookmarksHtmlCreated++;
         if (bookmarksHtmlCreated === self.firstEntriesCount) {
@@ -252,6 +255,13 @@ Remark.prototype.login = function () {
     console.log("not logged in");
     localStorage.setObject("bookmarks", null);
     window.location.href = "login.php";
+}
+
+Remark.prototype.getUrlParameter = function (key) {
+  var regexS = "[\\?&]"+key+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( location.href );
+  return results == null ? null : results[1];
 }
 
 Storage.prototype.setObject = function (key, value) {

@@ -6,6 +6,7 @@ ul.items{
 
 ul.items li{
     list-style: none;
+    white-space: nowrap;
 }
 
 ul.items li a{
