@@ -76,6 +76,19 @@ Remark.prototype.listen = function () {
 }
 
 Remark.prototype.initialize = function () {
+
+    var width = window.innerWidth
+                || document.documentElement.clientWidth
+                || document.body.clientWidth;
+
+    if (width < 600) {
+        if (this.maxCount === null) {
+            //TODO this does not work for more parameters
+            console.log('width of ' + width + 'px seems to be a mobile device, so optimize printing by setting a limit');
+            location.href = location.href = '?items=20';
+        }
+    }
+
     if (this.bookmarks.length !== 0) {
         //just print the old stuff at first
         this.printBookmarks();
