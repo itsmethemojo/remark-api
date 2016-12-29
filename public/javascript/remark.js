@@ -1,4 +1,5 @@
-function Remark(config) {
+function Remark(config)
+{
     this.readConfig(config);
     this.initialize();
     this.listen();
@@ -105,41 +106,47 @@ Remark.prototype.printBookmarks = function () {
         if (this.isBookmarkFiltered(self.bookmarks[i], i === 0 ? {"id": null} : self.bookmarks[previousId])) {
             continue;
         }
-        if(self.maxCount !== null && self.maxCount == bookmarksHtmlCreated){
+        if (self.maxCount !== null && self.maxCount == bookmarksHtmlCreated) {
             break;
         }
         bookmarksHtmlCreated++;
         if (bookmarksHtmlCreated === self.firstEntriesCount) {
-            $(self.containerDivId).html('<ul class="items">' + html + '</ul>');
+            $(self.containerDivId).html('<table class="items">' + html + '</table>');
         }
         html += this.printBookmark(self.bookmarks[i]);
         previousId = i;
     }
-    $(self.containerDivId).html('<ul class="items">' + html + '</ul>');
+    $(self.containerDivId).html('<table class="items">' + html + '</table>');
     $("span.title a").click(function () {
         $anker = $(this);
         $.getJSON(
-                self.apiUrl + "click/" + $anker.closest("li").data("id") + "/",
-                function (result) {
+            self.apiUrl + "click/" + $anker.closest("li").data("id") + "/",
+            function (result) {
                     self.refresh();
-                }
+            }
         );
     });
 
 }
 
 Remark.prototype.printBookmark = function (bookmark) {
-    return '<li data-id="' + bookmark['id'] + '" data-remark="' + bookmark['remarks'] + '" data-click="' + bookmark['clicks'] + '">' +
-            '<span class="date">' + this.extractDate(bookmark['created']) + '</span>' +
-            '<span class="time">' + this.extractTime(bookmark['created']) + '</span>' +
-            '<div class="icon remark level' + this.getRemarkVisibility(bookmark['remarks']) + '"><div></div><div></div><div></div><div></div></div>' +
-            '<div class="icon click level' + this.getClickVisibility(bookmark['clicks']) + '"><div></div><div></div><div></div><div></div></div>' +
-            '<span class="title">' +
+
+    var fourDivs = '<div></div><div></div><div></div><div></div>';
+    return '<tr>' +
+            '<td class="date">' + this.extractDate(bookmark['created']) + '</td>' +
+            '<td class="time">' + this.extractTime(bookmark['created']) + '</td>' +
+            '<td class="icon"><div class="icon remark level' + this.getRemarkVisibility(bookmark['remarks']) + '">' + fourDivs + '</div></td>' +
+            '<td class="icon"><div class="icon click level' + this.getClickVisibility(bookmark['clicks']) + '">' + fourDivs + '</div></td>' +
+            '<td class="title">' +
             '<a target="_blank" href="' + bookmark['url'] + '">' +
             (bookmark['customtitle'] === "" ? bookmark['title'] : bookmark['customtitle']) +
-            '</a></span>' +
-            '<br><span class="domain">' + bookmark['domain'] + '</span>' +
-            '</li>';
+            '</a></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td colspan="4"></td>' +
+            '<td class="domain">' + bookmark['domain'] + '</td>'
+            '</tr>';
+
 }
 
 Remark.prototype.isBookmarkFiltered = function (bookmark, lastBookmark) {
@@ -225,7 +232,6 @@ Remark.prototype.getRemarkVisibility = function (count) {
             return 4;
         case 4:
             return 6;
-
     }
     return 8;
 }
@@ -241,14 +247,18 @@ Remark.prototype.getClickVisibility = function (count) {
         case 3:
             return 3;
     }
-    if (count <= 6)
+    if (count <= 6) {
         return 4;
-    if (count <= 10)
+    }
+    if (count <= 10) {
         return 5;
-    if (count <= 15)
+    }
+    if (count <= 15) {
         return 6;
-    if (count <= 20)
+    }
+    if (count <= 20) {
         return 7;
+    }
 
     return 8;
 }
@@ -261,10 +271,10 @@ Remark.prototype.login = function () {
 }
 
 Remark.prototype.getUrlParameter = function (key) {
-  var regexS = "[\\?&]"+key+"=([^&#]*)";
-  var regex = new RegExp( regexS );
-  var results = regex.exec( location.href );
-  return results == null ? null : results[1];
+    var regexS = "[\\?&]"+key+"=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(location.href);
+    return results == null ? null : results[1];
 }
 
 Storage.prototype.setObject = function (key, value) {

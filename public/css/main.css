@@ -1,57 +1,62 @@
-ul.items{
+table.items{
     padding: 0;
     font-size: 1em;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
-ul.items li{
-    list-style: none;
-    white-space: nowrap;
+table.items tr{
+  vertical-align: top;
 }
 
-ul.items li a{
+table.items tr a{
     text-decoration: none;
 }
 
-ul.items li a:link {
+table.items tr a:link {
     color: inherit;
 }
 
-ul.items li a:visited {
+table.items tr a:visited {
     color: inherit;
 }
 
-ul.items li a:hover {
+table.items tr a:hover {
     color: inherit;
 }
 
-ul.items li a:active {
+table.items tr a:active {
     color: inherit;
 }
 
-ul.items li span{
+table.items tr td{
 }
 
-ul.items li span.date{
+table.items tr td.date{
     font-size: 0.6em;
+    padding-top: 5px;
     padding-right: 15px;
     color: grey;
 }
 
-ul.items li span.time{
+table.items tr td.time{
     font-size: 0.6em;
+    padding-top: 5px;
     padding-right: 15px;
     color: grey;
 }
 
-ul.items li span.title{
+table.items tr td.title{
 }
 
-ul.items li span.domain{
+table.items tr td.domain{
     font-size: 0.6em;
-    padding-left: 150px;
     color: grey;
 }
+
+table.items tr td.icon{
+    padding-top: 3px;
+}
+
 
 div.icon{
     position:relative;
@@ -178,15 +183,16 @@ div.icon.level8 div:nth-child(4){
 }
 
 input.filter{
-    width:200px;
+    //width:200px;
+    width:100%;
 }
 
 input.insert{
-    display:none;
+    //display:none;
     width:100%;
-    height: 400px;
-    text-align: center;
-    font-size: 5em;
+    //height: 400px;
+    //text-align: center;
+    //font-size: 5em;
 }
 
 input.insert.toggled{
