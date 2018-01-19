@@ -2,8 +2,8 @@
 
 namespace Itsmethemojo\Remark;
 
-use Itsmethemojo\Storage\Database;
-use Itsmethemojo\Storage\QueryParameters;
+//use Itsmethemojo\Storage\Database;
+//use Itsmethemojo\Storage\QueryParameters;
 use Exception;
 
 class Bookmarks
