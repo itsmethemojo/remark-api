@@ -130,10 +130,10 @@ Remark.prototype.printBookmarks = function () {
         previousId = i;
     }
     $(self.containerDivId).html('<table class="items">' + html + '</table>');
-    $("span.title a").click(function () {
+    $("td.title a").click(function () {
         $anker = $(this);
         $.getJSON(
-            self.apiUrl + "click/" + $anker.closest("li").data("id") + "/",
+            self.apiUrl + "click/" + $anker.closest("tr").data("id") + "/",
             function (result) {
                     self.refresh();
             }
@@ -145,7 +145,7 @@ Remark.prototype.printBookmarks = function () {
 Remark.prototype.printBookmark = function (bookmark) {
 
     var fourDivs = '<div></div><div></div><div></div><div></div>';
-    return '<tr>' +
+    return '<tr data-id="' + bookmark['id'] + '">' +
             '<td class="date">' + this.extractDate(bookmark['created']) + '</td>' +
             '<td class="time">' + this.extractTime(bookmark['created']) + '</td>' +
             '<td class="icon"><div class="icon remark level' + this.getRemarkVisibility(bookmark['remarks']) + '">' + fourDivs + '</div></td>' +
