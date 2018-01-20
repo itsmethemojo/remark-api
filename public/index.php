@@ -8,14 +8,13 @@ header('Pragma: no-cache');
 require __DIR__ . '/../vendor/autoload.php';
 
 use Itsmethemojo\Authentification\TwitterExtended;
-use Itsmethemojo\Authentification\Redirect;
 use Itsmethemojo\Authentification\ParameterException;
-use Itsmethemojo\File\Config;
+use Itsmethemojo\Remark\IniFile;
 
 $iniFilename = 'remark';
 
 try {
-    $debug = boolval(Config::get($iniFilename, array('DEBUG_MODE'))['DEBUG_MODE']);
+    $debug = boolval(IniFile::readConfig($iniFilename, array('DEBUG_MODE'))['DEBUG_MODE']);
 } catch (Exception $e) {
     $debug = false;
 }

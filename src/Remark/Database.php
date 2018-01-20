@@ -2,7 +2,6 @@
 
 namespace Itsmethemojo\Remark;
 
-use Itsmethemojo\File\ConfigReader;
 use PDO;
 use Exception;
 
@@ -25,7 +24,7 @@ class Database
         if ($this->pdo !== null) {
             return $this->pdo;
         }
-        $config = ConfigReader::get(
+        $config = IniFile::readConfig(
             $this->iniFile,
             array('MYSQL_USERNAME', 'MYSQL_PASSWORD', 'MYSQL_HOST', 'MYSQL_DATABASE')
         );
