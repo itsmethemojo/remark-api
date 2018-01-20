@@ -45,23 +45,15 @@ $app->get(
             $output = $response->withStatus(401)->withJson(array("status" => "not authorized"));
             return $this->cache->allowCache($output, 'public', 0);
         }
-        try {
-            $userId    = 1;
-            $bookmarks = new Itsmethemojo\Remark\Bookmarks(
-                $this->get('settings')['iniFileName'],
-                $this->get('settings')['iniFileName']
-            );
-            $data      = $bookmarks->getAll($userId);
 
-            return $response->withJson($data);
-        } catch (Exception $ex) {
-            throw $ex;
-            return $response->withStatus(400)->withJson(
-                array(
-                    'error' => $ex->getMessage()
-                )
-            );
-        }
+        $userId    = 1;
+        $bookmarks = new Itsmethemojo\Remark\Bookmarks(
+            $this->get('settings')['iniFileName'],
+            $this->get('settings')['iniFileName']
+        );
+        $data      = $bookmarks->getAll($userId);
+
+        return $response->withJson($data);
     }
 );
 
@@ -74,21 +66,14 @@ $app->get(
             $output = $response->withStatus(401)->withJson(array("status" => "not authorized"));
             return $this->cache->allowCache($output, 'public', 0);
         }
-        try {
-            $userId    = 1;
-            $bookmarks = new Itsmethemojo\Remark\Bookmarks(
-                $this->get('settings')['iniFileName'],
-                $this->get('settings')['iniFileName']
-            );
-            $data      = $bookmarks->click($userId, $args['id']);
-            return $response->withJson($data);
-        } catch (Exception $ex) {
-            return $response->withStatus(400)->withJson(
-                array(
-                    'error' => $ex->getMessage()
-                )
-            );
-        }
+
+        $userId    = 1;
+        $bookmarks = new Itsmethemojo\Remark\Bookmarks(
+            $this->get('settings')['iniFileName'],
+            $this->get('settings')['iniFileName']
+        );
+        $data      = $bookmarks->click($userId, $args['id']);
+        return $response->withJson($data);
     }
 );
 
@@ -101,35 +86,28 @@ $app->get(
             $output = $response->withStatus(401)->withJson(array("status" => "not authorized"));
             return $this->cache->allowCache($output, 'public', 0);
         }
-        try {
-            $userId    = 1;
-            if (!$request->getParam('url')) {
-                return $response->withStatus(400)->withJson(
-                    array(
-                        'error' => 'missing parameter: url'
-                    )
-                );
-            }
-            $bookmarks = new Itsmethemojo\Remark\Bookmarks(
-                $this->get('settings')['iniFileName'],
-                $this->get('settings')['iniFileName']
-            );
-            $data = $bookmarks->remark(
-                $userId,
-                $request->getParam('url'),
-                $request->getParam('title')
-            );
 
-            // to use it in browser extension??
-            //header("Access-Control-Allow-Origin: *");
-            return $response->withJson($data);
-        } catch (Exception $ex) {
+        $userId = 1;
+        if (!$request->getParam('url')) {
             return $response->withStatus(400)->withJson(
                 array(
-                    'error' => $ex->getMessage()
+                    'error' => 'missing parameter: url'
                 )
             );
         }
+        $bookmarks = new Itsmethemojo\Remark\Bookmarks(
+            $this->get('settings')['iniFileName'],
+            $this->get('settings')['iniFileName']
+        );
+        $data = $bookmarks->remark(
+            $userId,
+            $request->getParam('url'),
+            $request->getParam('title')
+        );
+
+        // to use it in browser extension??
+        //header("Access-Control-Allow-Origin: *");
+        return $response->withJson($data);
     }
 );
 

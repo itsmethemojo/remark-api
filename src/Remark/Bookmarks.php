@@ -70,7 +70,10 @@ class Bookmarks
     public function click($userId, $bookmarkId)
     {
         $params = new QueryParameters();
-        $params->add($this->getTimestamp())->add($bookmarkId)->add($userId);
+        $params
+            ->add($this->getTimestamp())
+            ->add($bookmarkId)
+            ->add($userId);
         $updateClickCountQuery = "UPDATE bookmark SET clickcount = clickcount + 1, clicked = ? "
                                   . "WHERE id = ? AND user_id = ?";
         // first i update the overall count.
@@ -111,96 +114,90 @@ class Bookmarks
 
     public function remark($userId, $url, $title = null)
     {
-        // refactor idea
-        // first update again and catch exception
-        // if exception insert
-        $bookmarkId = $this->getBookmarkId($userId, $url);
-        if ($bookmarkId === null) {
-            $this->insertBookmark($userId, $url, $title);
-            $bookmarkId = $this->getBookmarkId($userId, $url);
-            if ($bookmarkId === null) {
-                throw new Exception("ohohh");
+        $params = new QueryParameters();
+        $params
+            ->add($this->getTimestamp())
+            ->add($url)
+            ->add($userId);
+        $updateRemarkCountQuery = "UPDATE bookmark SET bookmarkcount =  bookmarkcount + 1, updated = ? "
+                                  . "WHERE url = ? AND user_id = ?";
+
+        try {
+            $this->getDatabaseNew()->query(
+                $updateRemarkCountQuery,
+                $params,
+                true
+            );
+        } catch (EmptyUpdateException $e) {
+            // so this bookmark is new
+            $urlArray = parse_url($url);
+
+            if (!$urlArray || !$urlArray['host']
+            ) {
+                throw new Exception("no valid url");
             }
+
+            if ($title === null) {
+                $title = $this->retrieveUrlTitle($url);
+            }
+
+            $insertBookmarkQuery = "INSERT INTO bookmark "
+                                    . "(url, title, user_id, domain, created, updated, bookmarkcount) "
+                                    . "VALUES (?,?,?,?,?,?,?)";
+            $params
+                ->clear()
+                ->add($url)
+                ->add($title)
+                ->add($userId)
+                ->add($urlArray['host'])
+                ->add($this->getTimestamp())
+                ->add($this->getTimestamp())
+                ->add(1);
+
+            // throws exception when no insert is made ???
+            $this->getDatabaseNew()->query(
+                $insertBookmarkQuery,
+                $params,
+                true
+            );
         }
 
-        $params1 = new QueryParameters();
-        $params1
-            ->add($bookmarkId)
-            ->add($userId)
-            ->add($this->getTimestamp());
+        $params
+            ->clear()
+            ->add($url)
+            ->add($userId);
 
-        $query1 = "INSERT INTO bookmarktime (bookmark_id, user_id, created) VALUES (?,?,?)";
+        $readClickCountQuery = "SELECT bookmarkcount, id FROM bookmark WHERE url = ? AND user_id = ?";
 
-        $this->database->modify(
-            array('allBookmarkIdsAndUrls', 'allData-' . $userId),
-            $query1,
-            $params1
-        );
-
-        $params2 = new QueryParameters();
-        $params2
-            ->add($this->getTimestamp())
-            ->add($bookmarkId);
-
-        $query2 = "UPDATE bookmark SET bookmarkcount =  bookmarkcount + 1, updated = ? WHERE id = ?";
-
-        $this->database->modify(
-            array('allBookmarkIdsAndUrls', 'allData-' . $userId),
-            $query2,
-            $params2
-        );
-
-        $params3 = new QueryParameters();
-        $params3->add($bookmarkId);
-
-        $query3 = "SELECT bookmarkcount FROM bookmark WHERE id = ?";
-        $result = $this->database->read(
-            array(),
-            $query3,
-            $params3
+        $result = $this->getDatabaseNew()->query(
+            $readClickCountQuery,
+            $params
         );
 
         if (count($result) !== 1) {
             throw new Exception("ohohh");
         }
 
-        return array("bookmarkcount" => $result[0]['bookmarkcount']);
-    }
-
-    
-
-    private function insertBookmark($userId, $url, $title = null)
-    {
-        $urlArray = parse_url($url);
-        if (!$urlArray || !$urlArray['host']
-        ) {
-            throw new Exception("no valid url");
-        }
-
-        if ($title === null) {
-            $title = $this->retrieveUrlTitle($url);
-        }
-
-        $query1 = "INSERT INTO bookmark (url, title, user_id, domain, created, updated) VALUES (?,?,?,?,?,?)";
-
-        $params1 = new QueryParameters();
-        $params1
-            ->add($url)
-            ->add($title)
-            ->add($userId)
-            ->add($urlArray['host'])
+        $params
+            ->clear()
             ->add($this->getTimestamp())
-            ->add($this->getTimestamp());
+            ->add($result[0]['id'])
+            ->add($userId);
 
-        $this->database->modify(
-            array('allBookmarkIdsAndUrls', 'allData-' . $userId),
-            $query1,
-            $params1
+        $insertRemarkTimeQuery = "INSERT INTO bookmarktime (created, bookmark_id, user_id) VALUES (?,?,?)";
+
+        $this->getDatabaseNew()->query(
+            $insertRemarkTimeQuery,
+            $params,
+            true
         );
+
+        return array("bookmarkcount" => $result[0]['bookmarkcount']);
     }
 
     private function retrieveUrlTitle($url)
     {
+        //TODO set proper user-agent
         try {
             $client = new \GuzzleHttp\Client();
             $res    = $client->request('GET', $url);
@@ -220,35 +217,6 @@ class Bookmarks
         }
 
         return self::NO_TITLE;
-    }
-
-    private function getBookmarkId($userId, $url)
-    {
-        $query = "SELECT user_id, id as bookmark_id, url FROM bookmark";
-
-        $availableBookmarks = $this->database->read(
-            array('allBookmarkIdsAndUrls'),
-            $query
-        );
-
-        //this looks dumb
-        foreach ($availableBookmarks as $availableBookmark) {
-            if ((string) $availableBookmark['user_id'] === (string) $userId && ( $availableBookmark['url']
-                === $url || $availableBookmark['url'] === $url . "/" || $availableBookmark['url'] . "/"
-                === $url )
-            ) {
-                return $availableBookmark['bookmark_id'];
-            }
-        }
-        return null;
-    }
-
-    private function getTagsToInvalidate($userId)
-    {
-        return array(
-            'allBookmarkIdsAndUrls',
-            'allData-' . $userId,
-        );
     }
 
     private function getTimestamp()
