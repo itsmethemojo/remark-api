@@ -13,11 +13,20 @@ class Bookmarks
     /** @var Database * */
     private $database;
 
+    /** @var Databasenew * */
+    private $databasenew;
+
     /** @var int * */
     private $timestamp;
 
+    /** @var String **/
+    private $iniFile = null;
+
     public function __construct($databaseConfigKey = "remark-mysql", $storageConfigKey = "remark-redis")
     {
+        //TODO change this final
+        //$this->iniFile = $iniFile;
+        $this->iniFile = $databaseConfigKey;
         $this->database = new Database($databaseConfigKey, $storageConfigKey);
     }
 
@@ -41,14 +50,38 @@ class Bookmarks
                     JOIN bookmarktime bt
                     ON b.id = bt.bookmark_id WHERE b.user_id = ? ORDER BY bt.id DESC";
 
-        return $this->database->read(
-            array('allData-' . $userId),
+        return $this->getDatabaseNew()->select(
             $query,
-            $params,
-            false,
-            60 * 60 * 24 * 30
+            $params
         );
     }
+
+    private function getDatabaseNew()
+    {
+        if ($this->databasenew !== null) {
+            return $this->databasenew;
+        }
+
+        $this->databasenew = new Databasenew($this->iniFile);
+
+        return $this->databasenew;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function click($userId, $bookmarkId)
     {

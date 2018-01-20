@@ -15,6 +15,7 @@ class QueryParameters
             && !is_float($parameter)
             && !is_string($parameter)
         ) {
+            //TODO use custom exception
             throw new Exception(
                 'query parameter must be either int, float or string'
             );
