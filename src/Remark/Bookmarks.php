@@ -167,41 +167,7 @@ class Bookmarks
         return array("bookmarkcount" => $result[0]['bookmarkcount']);
     }
 
-    public function delete($userId, $url)
-    {
-        $bookmarkId = $this->getBookmarkId($userId, $url);
-        if ($bookmarkId === null) {
-            throw new Exception("can not delete what does not exist");
-        }
-
-        $params1 = new QueryParameters();
-        $params1->add($bookmarkId);
-        $query1  = "DELETE FROM bookmark WHERE id = ?";
-        $this->database->modify(
-            array('allBookmarkIdsAndUrls', 'allData-' . $userId),
-            $query1,
-            $params1
-        );
-    }
-
-    public function updateTitle($userId, $url, $title)
-    {
-        $bookmarkId = $this->getBookmarkId($userId, $url);
-        if ($bookmarkId === null) {
-            throw new Exception("can not modify what does not exist");
-        }
-
-        $params1 = new QueryParameters();
-        $params1
-            ->add($title)
-            ->add($bookmarkId);
-        $query1  = "UPDATE bookmark SET title = ? WHERE id = ?";
-        $this->database->modify(
-            array('allData-' . $userId),
-            $query1,
-            $params1
-        );
-    }
+    
 
     private function insertBookmark($userId, $url, $title = null)
     {
@@ -275,26 +241,6 @@ class Bookmarks
             }
         }
         return null;
-    }
-
-    private function isUsersBookmark($userId, $bookmarkId)
-    {
-        $query = "SELECT user_id, id as bookmark_id, url FROM bookmark";
-
-        $availableBookmarks = $this->database->read(
-            array('allBookmarkIdsAndUrls'),
-            $query
-        );
-
-        //this looks dumb
-        foreach ($availableBookmarks as $availableBookmark) {
-            if ($availableBookmark['bookmark_id'] == $bookmarkId && $availableBookmark['user_id']
-                == $userId
-            ) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private function getTagsToInvalidate($userId)
