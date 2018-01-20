@@ -2,8 +2,6 @@
 
 namespace Itsmethemojo\Remark;
 
-//use Itsmethemojo\Storage\Database;
-//use Itsmethemojo\Storage\QueryParameters;
 use Exception;
 
 class Bookmarks
@@ -13,27 +11,21 @@ class Bookmarks
     /** @var Database * */
     private $database;
 
-    /** @var Databasenew * */
-    private $databasenew;
-
     /** @var int * */
     private $timestamp;
 
     /** @var String **/
     private $iniFile = null;
 
-    public function __construct($databaseConfigKey = "remark-mysql", $storageConfigKey = "remark-redis")
+    public function __construct($iniFile)
     {
-        //TODO change this final
-        //$this->iniFile = $iniFile;
-        $this->iniFile = $databaseConfigKey;
-        $this->database = new Database($databaseConfigKey, $storageConfigKey);
+        $this->iniFile = $iniFile;
     }
 
     public function getAll($userId)
     {
-        $params = new QueryParameters();
-        $params->add($userId);
+        $params = (new QueryParameters())
+                  ->add($userId);
 
         $query = "SELECT
                     b.id as id,
@@ -50,36 +42,35 @@ class Bookmarks
                     JOIN bookmarktime bt
                     ON b.id = bt.bookmark_id WHERE b.user_id = ? ORDER BY bt.id DESC";
 
-        return $this->getDatabaseNew()->query(
+        return $this->getDatabase()->query(
             $query,
             $params
         );
     }
 
-    private function getDatabaseNew()
+    private function getDatabase()
     {
-        if ($this->databasenew !== null) {
-            return $this->databasenew;
+        if ($this->database !== null) {
+            return $this->database;
         }
 
-        $this->databasenew = new Databasenew($this->iniFile);
+        $this->database = new Database($this->iniFile);
 
-        return $this->databasenew;
+        return $this->database;
     }
 
     public function click($userId, $bookmarkId)
     {
-        $params = new QueryParameters();
-        $params
-            ->add($this->getTimestamp())
-            ->add($bookmarkId)
-            ->add($userId);
+        $params = (new QueryParameters())
+                  ->add($this->getTimestamp())
+                  ->add($bookmarkId)
+                  ->add($userId);
         $updateClickCountQuery = "UPDATE bookmark SET clickcount = clickcount + 1, clicked = ? "
                                   . "WHERE id = ? AND user_id = ?";
         // first i update the overall count.
         // if there is no updated line this bookmark does not belong to this user or does not exist
         try {
-            $this->getDatabaseNew()->query(
+            $this->getDatabase()->query(
                 $updateClickCountQuery,
                 $params,
                 true
@@ -90,16 +81,16 @@ class Bookmarks
 
 
         $insertClickTimeQuery = "INSERT INTO clicktime (created, bookmark_id, user_id) VALUES (?,?,?)";
-        $this->getDatabaseNew()->query(
+        $this->getDatabase()->query(
             $insertClickTimeQuery,
             $params
         );
 
-        $params->clear()->add($bookmarkId);
+        $params = (new QueryParameters())
+                  ->add($bookmarkId);
 
         $readClickCountQuery = "SELECT clickcount FROM bookmark WHERE id = ?";
-        $result = $this->database->read(
-            array(),
+        $result = $this->getDatabase()->query(
             $readClickCountQuery,
             $params
         );
@@ -114,16 +105,15 @@ class Bookmarks
 
     public function remark($userId, $url, $title = null)
     {
-        $params = new QueryParameters();
-        $params
-            ->add($this->getTimestamp())
-            ->add($url)
-            ->add($userId);
+        $params = (new QueryParameters())
+                  ->add($this->getTimestamp())
+                  ->add($url)
+                  ->add($userId);
         $updateRemarkCountQuery = "UPDATE bookmark SET bookmarkcount =  bookmarkcount + 1, updated = ? "
                                   . "WHERE url = ? AND user_id = ?";
 
         try {
-            $this->getDatabaseNew()->query(
+            $this->getDatabase()->query(
                 $updateRemarkCountQuery,
                 $params,
                 true
@@ -144,32 +134,30 @@ class Bookmarks
             $insertBookmarkQuery = "INSERT INTO bookmark "
                                     . "(url, title, user_id, domain, created, updated, bookmarkcount) "
                                     . "VALUES (?,?,?,?,?,?,?)";
-            $params
-                ->clear()
-                ->add($url)
-                ->add($title)
-                ->add($userId)
-                ->add($urlArray['host'])
-                ->add($this->getTimestamp())
-                ->add($this->getTimestamp())
-                ->add(1);
+            $params = (new QueryParameters())
+                      ->add($url)
+                      ->add($title)
+                      ->add($userId)
+                      ->add($urlArray['host'])
+                      ->add($this->getTimestamp())
+                      ->add($this->getTimestamp())
+                      ->add(1);
 
             // throws exception when no insert is made ???
-            $this->getDatabaseNew()->query(
+            $this->getDatabase()->query(
                 $insertBookmarkQuery,
                 $params,
                 true
             );
         }
 
-        $params
-            ->clear()
-            ->add($url)
-            ->add($userId);
+        $params = (new QueryParameters())
+                  ->add($url)
+                  ->add($userId);
 
         $readClickCountQuery = "SELECT bookmarkcount, id FROM bookmark WHERE url = ? AND user_id = ?";
 
-        $result = $this->getDatabaseNew()->query(
+        $result = $this->getDatabase()->query(
             $readClickCountQuery,
             $params
         );
@@ -178,15 +166,14 @@ class Bookmarks
             throw new Exception("ohohh");
         }
 
-        $params
-            ->clear()
-            ->add($this->getTimestamp())
-            ->add($result[0]['id'])
-            ->add($userId);
+        $params = (new QueryParameters())
+                  ->add($this->getTimestamp())
+                  ->add($result[0]['id'])
+                  ->add($userId);
 
         $insertRemarkTimeQuery = "INSERT INTO bookmarktime (created, bookmark_id, user_id) VALUES (?,?,?)";
 
-        $this->getDatabaseNew()->query(
+        $this->getDatabase()->query(
             $insertRemarkTimeQuery,
             $params,
             true

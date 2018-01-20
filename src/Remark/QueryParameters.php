@@ -24,12 +24,6 @@ class QueryParameters
         return $this;
     }
 
-    public function clear()
-    {
-        $this->parameters = [];
-        return $this;
-    }
-
     public function toArray()
     {
         return $this->parameters;
