@@ -3,7 +3,6 @@
 namespace Itsmethemojo\Remark;
 
 use Itsmethemojo\File\ConfigReader;
-use Itsmethemojo\Remark\QueryParameters;
 use PDO;
 use Exception;
 
@@ -41,7 +40,7 @@ class Databasenew
         return $this->pdo;
     }
 
-    public function select($query, QueryParameters $parameters = null)
+    public function query($query, QueryParameters $parameters = null, $exceptionOnEmptyUpdate = false)
     {
         $pdo = $this->getPdo();
 
@@ -55,6 +54,10 @@ class Databasenew
         //TODO use custom exception
         if (is_array($stmt->errorInfo()) && $stmt->errorInfo()[1] != null) {
             throw new Exception($stmt->errorInfo()[2]);
+        }
+
+        if ($exceptionOnEmptyUpdate && $stmt->rowCount() === 0) {
+            throw new EmptyUpdateException('no line to update');
         }
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

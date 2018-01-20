@@ -50,7 +50,7 @@ class Bookmarks
                     JOIN bookmarktime bt
                     ON b.id = bt.bookmark_id WHERE b.user_id = ? ORDER BY bt.id DESC";
 
-        return $this->getDatabaseNew()->select(
+        return $this->getDatabaseNew()->query(
             $query,
             $params
         );
@@ -67,57 +67,38 @@ class Bookmarks
         return $this->databasenew;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function click($userId, $bookmarkId)
     {
-        if (!$this->isUsersBookmark($userId, $bookmarkId)) {
-            throw new Exception("action not allowed");
+        $params = new QueryParameters();
+        $params->add($this->getTimestamp())->add($bookmarkId)->add($userId);
+        $updateClickCountQuery = "UPDATE bookmark SET clickcount = clickcount + 1, clicked = ? "
+                                  . "WHERE id = ? AND user_id = ?";
+        // first i update the overall count.
+        // if there is no updated line this bookmark does not belong to this user or does not exist
+        try {
+            $this->getDatabaseNew()->query(
+                $updateClickCountQuery,
+                $params,
+                true
+            );
+        } catch (EmptyUpdateException $e) {
+            throw new Exception('not your bookmark');
         }
 
-        $query1  = "INSERT INTO clicktime (bookmark_id, user_id, created) VALUES (?,?,?)";
-        $params1 = new QueryParameters();
-        $params1->add($bookmarkId)->add($userId)->add($this->getTimestamp());
 
-        $this->database->modify(
-            array(),
-            $query1,
-            $params1
+        $insertClickTimeQuery = "INSERT INTO clicktime (created, bookmark_id, user_id) VALUES (?,?,?)";
+        $this->getDatabaseNew()->query(
+            $insertClickTimeQuery,
+            $params
         );
 
-        $query2  = "UPDATE bookmark SET clickcount = clickcount + 1, clicked = ? WHERE id = ?";
-        $params2 = new QueryParameters();
-        $params2->add($this->getTimestamp())->add($bookmarkId);
+        $params->clear()->add($bookmarkId);
 
-        //final operation -> use invalidate tags
-        $this->database->modify(
-            array('allBookmarkIdsAndUrls', 'allData-' . $userId),
-            $query2,
-            $params2
-        );
-
-        $params3 = new QueryParameters();
-        $params3->add($bookmarkId);
-
-        $query3 = "SELECT clickcount FROM bookmark WHERE id = ?";
+        $readClickCountQuery = "SELECT clickcount FROM bookmark WHERE id = ?";
         $result = $this->database->read(
             array(),
-            $query3,
-            $params3
+            $readClickCountQuery,
+            $params
         );
 
         if (count($result) !== 1) {
@@ -127,8 +108,12 @@ class Bookmarks
         return array("clicks" => $result[0]['clickcount']);
     }
 
+
     public function remark($userId, $url, $title = null)
     {
+        // refactor idea
+        // first update again and catch exception
+        // if exception insert
         $bookmarkId = $this->getBookmarkId($userId, $url);
         if ($bookmarkId === null) {
             $this->insertBookmark($userId, $url, $title);

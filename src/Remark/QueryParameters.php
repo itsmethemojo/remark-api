@@ -7,7 +7,7 @@ use Exception;
 class QueryParameters
 {
 
-    private $parameters;
+    private $parameters = [];
 
     public function add($parameter)
     {
@@ -21,6 +21,12 @@ class QueryParameters
             );
         }
         $this->parameters[] = $parameter;
+        return $this;
+    }
+
+    public function clear()
+    {
+        $this->parameters = [];
         return $this;
     }
 
