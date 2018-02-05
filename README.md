@@ -5,6 +5,7 @@ TODO description
 ## howto to run it local in 2 minutes
 
 ```
+docker run --rm --interactive --tty --volume $PWD:/app composer install ;\
 docker build -t fpm-mysql-redis docker/fpm; \
 docker-compose stop; \
 docker-compose up -d --force-recreate; \
