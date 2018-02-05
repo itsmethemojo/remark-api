@@ -1,4 +1,2 @@
-/nbproject/
 /vendor/
-/config/
-composer.phar
+/config/*

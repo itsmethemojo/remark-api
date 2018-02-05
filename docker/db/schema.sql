@@ -15,8 +15,6 @@ DROP DATABASE IF EXISTS remark;
 
 CREATE DATABASE remark;
 
-USE remark;
-
 --
 -- Table structure for table `bookmark`
 --
@@ -24,7 +22,7 @@ USE remark;
 DROP TABLE IF EXISTS `bookmark`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `bookmark` (
+CREATE TABLE `remark`.`bookmark` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `url` varchar(400) CHARACTER SET latin1 NOT NULL,
@@ -47,7 +45,7 @@ CREATE TABLE `bookmark` (
 -- Table structure for table `bookmarktime`
 --
 
-DROP TABLE IF EXISTS `bookmarktime`;
+DROP TABLE IF EXISTS `remark`.`bookmarktime`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bookmarktime` (
@@ -64,7 +62,7 @@ CREATE TABLE `bookmarktime` (
 -- Table structure for table `clicktime`
 --
 
-DROP TABLE IF EXISTS `clicktime`;
+DROP TABLE IF EXISTS `remark`.`clicktime`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `clicktime` (

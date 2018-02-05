@@ -14,14 +14,6 @@ class Bookmarks
     /** @var int * */
     private $timestamp;
 
-    /** @var String **/
-    private $iniFile = null;
-
-    public function __construct($iniFile)
-    {
-        $this->iniFile = $iniFile;
-    }
-
     public function getAll($userId)
     {
         $params = (new QueryParameters())
@@ -54,7 +46,7 @@ class Bookmarks
             return $this->database;
         }
 
-        $this->database = new Database($this->iniFile);
+        $this->database = new Database();
 
         return $this->database;
     }

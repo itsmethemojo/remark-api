@@ -9,24 +9,18 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Itsmethemojo\Authentification\TwitterExtended;
 use Itsmethemojo\Authentification\ParameterException;
-use Itsmethemojo\Remark\IniFile;
+use Itsmethemojo\Remark\Project;
+use Itsmethemojo\Remark\EnvironmentParameter;
 
-$iniFilename = 'remark';
+Project::readEnvironmentConfig();
 
-try {
-    $debug = boolval(IniFile::readConfig($iniFilename, array('DEBUG_MODE'))['DEBUG_MODE']);
-} catch (Exception $e) {
-    $debug = false;
-}
 
 $config = [
     'settings' => [
-        'displayErrorDetails' => $debug,
-        'iniFileName' => $iniFilename,
-        'loginIniFileName' => 'login'
+        'displayErrorDetails' => EnvironmentParameter::get('DEBUG_MODE', false)
     ],
 ];
-
+header("Access-Control-Allow-Origin: *");
 $app = new \Slim\App($config);
 
 //setup caching
@@ -39,17 +33,14 @@ $container['cache'] = function () {
 $app->get(
     '/',
     function ($request, $response, $args) {
-        $twitter = new TwitterExtended($this->get('settings')['loginIniFileName']);
+        $twitter = new TwitterExtended();
         if (!$twitter->isLoggedIn()) {
             $output = $response->withStatus(401)->withJson(array("status" => "not authorized"));
             return $this->cache->allowCache($output, 'public', 0);
         }
 
         $userId    = 1;
-        $bookmarks = new Itsmethemojo\Remark\Bookmarks(
-            $this->get('settings')['iniFileName'],
-            $this->get('settings')['iniFileName']
-        );
+        $bookmarks = new Itsmethemojo\Remark\Bookmarks();
         $data      = $bookmarks->getAll($userId);
 
         return $response->withJson($data);
@@ -60,17 +51,14 @@ $app->get(
 $app->get(
     '/click/{id}/',
     function ($request, $response, $args) {
-        $twitter = new TwitterExtended($this->get('settings')['loginIniFileName']);
+        $twitter = new TwitterExtended();
         if (!$twitter->isLoggedIn()) {
             $output = $response->withStatus(401)->withJson(array("status" => "not authorized"));
             return $this->cache->allowCache($output, 'public', 0);
         }
 
         $userId    = 1;
-        $bookmarks = new Itsmethemojo\Remark\Bookmarks(
-            $this->get('settings')['iniFileName'],
-            $this->get('settings')['iniFileName']
-        );
+        $bookmarks = new Itsmethemojo\Remark\Bookmarks();
         $data      = $bookmarks->click($userId, $args['id']);
         return $response->withJson($data);
     }
@@ -80,7 +68,7 @@ $app->get(
 $app->get(
     '/remark/',
     function ($request, $response, $args) {
-        $twitter = new TwitterExtended($this->get('settings')['loginIniFileName']);
+        $twitter = new TwitterExtended();
         if (!$twitter->isLoggedIn()) {
             $output = $response->withStatus(401)->withJson(array("status" => "not authorized"));
             return $this->cache->allowCache($output, 'public', 0);
@@ -94,10 +82,7 @@ $app->get(
                 )
             );
         }
-        $bookmarks = new Itsmethemojo\Remark\Bookmarks(
-            $this->get('settings')['iniFileName'],
-            $this->get('settings')['iniFileName']
-        );
+        $bookmarks = new Itsmethemojo\Remark\Bookmarks();
         $data = $bookmarks->remark(
             $userId,
             $request->getParam('url'),
