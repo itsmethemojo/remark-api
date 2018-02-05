@@ -18,7 +18,7 @@ hooks/codesniffer.sh
 ## use phpunit
 run phpunit in the php-fpm container
 ```
-docker-compose exec fpm bash -c 'cd /app; vendor/bin/phpunit .'
+docker-compose exec -T fpm bash -c 'cd /app; vendor/bin/phpunit .'
 ```
 
 ## use Composer
