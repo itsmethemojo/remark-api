@@ -18,6 +18,7 @@ Remark.prototype.readConfig = function (config) {
     this.clicks = $(this.clickSelectId).val();
     this.bookmarks = localStorage.getObject("bookmarks") || new Array();
     this.maxCount = this.getUrlParameter("items");
+    this.sharedRemark = this.getUrlParameter("remark");
 }
 
 Remark.prototype.listen = function () {
@@ -76,6 +77,18 @@ Remark.prototype.listen = function () {
 }
 
 Remark.prototype.initialize = function () {
+    var self = this;
+
+    if(this.sharedRemark){
+        var $insertField = $("#insert");
+        $insertField.val(this.sharedRemark);
+        var postUrl = this.apiUrl + "remark/?url=" + this.sharedRemark;
+        $.getJSON(postUrl, function () {
+            $insertField.val("");
+            $insertField.toggleClass("toggled");
+            self.refresh();
+        });
+    }
 
     var width = window.innerWidth
                 || document.documentElement.clientWidth
