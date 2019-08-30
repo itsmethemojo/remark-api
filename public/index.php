@@ -47,8 +47,7 @@ $app->get(
     }
 );
 
-//TODO change this to post
-$app->get(
+$app->post(
     '/click/{id}/',
     function ($request, $response, $args) {
         $twitter = new TwitterExtended();
