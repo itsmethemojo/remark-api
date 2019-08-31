@@ -63,8 +63,7 @@ $app->post(
     }
 );
 
-//TODO change this to post
-$app->get(
+$app->post(
     '/remark/',
     function ($request, $response, $args) {
         $twitter = new TwitterExtended();
