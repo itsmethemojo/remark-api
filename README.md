@@ -1,32 +1,26 @@
 # reMARK
 
-TODO description
+this is a refactor try with go framwork gin-gonic of the formar php applciation
 
-## howto to run it local in 2 minutes
+## prequisites
 
-```
-docker run --rm --interactive --tty --volume $PWD:/app composer install ;\
-docker build -t fpm-mysql-redis docker/fpm; \
-docker-compose stop; \
-docker-compose up -d --force-recreate; \
-docker-compose ps; \
-echo -e "\n\nopen: http://"$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker-compose ps | grep nginx_ | awk '{print $1}'))"/\n\n"
-```
+[go-task](https://github.com/go-task/task)
+[docker](https://www.docker.com/get-started)
 
-## what's next?
+## installation
 
-### configure the application
+`task dz:init`
 
-[more...](documentation/config.md)
+## start server local
 
-### available API routes
+`./local-server.sh`
 
-[more...](documentation/routes.md)
+## see swagger api documentation
 
-### howto use the development tools with the container
+[open](http://localhost:8080/swagger/index.html)
 
-[more...](documentation/tools.md)
+## interesting task targets
 
-### howto configure your webserver for it
+`task lint`
 
-[more...](https://www.slimframework.com/docs/start/web-servers.html)
+`task build`
