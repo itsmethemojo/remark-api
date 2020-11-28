@@ -1,2 +1,4 @@
-/vendor/
-/config/*
+/docs/
+! /.dckrz/
+/.dckrz/tmp/
+/main
