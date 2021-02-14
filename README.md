@@ -24,3 +24,8 @@ this is a refactor try with go framwork gin-gonic of the formar php applciation
 `task lint`
 
 `task build`
+
+## TODO
+
+1 use dotenv to retrieve database string
+2 add missing entities
