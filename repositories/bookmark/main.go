@@ -10,6 +10,7 @@ import (
 
 //TODO extract database connect to a private function or init
 func InitializeDatabase() {
+	//TODO use https://github.com/joho/godotenv
 	dsn := "root:rootpw@tcp(devdbhost:3306)/remark_demo?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
