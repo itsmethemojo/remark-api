@@ -13,6 +13,9 @@ RUN go get -u golang.org/x/lint/golint
 
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.33.0
 
+RUN go get -u -v gorm.io/gorm && \
+    go get -u -v gorm.io/driver/mysql
+
 WORKDIR /src
 
 EXPOSE 8080
