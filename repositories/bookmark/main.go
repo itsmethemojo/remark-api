@@ -55,9 +55,9 @@ func Remark(userId uint64, url string) error {
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		newBookmarkEntity := &BookmarkEntity{
 			Url:         url,
-			UserId:      userId,   //TODO retrieve
-			Title:       url, //TODO retrieve bx curling url with same useragent
-			RemarkCount: 1,   //TODO check if it starts with 0
+			UserId:      userId, //TODO retrieve
+			Title:       url,    //TODO retrieve bx curling url with same useragent
+			RemarkCount: 1,      //TODO check if it starts with 0
 			ClickCount:  0,
 		}
 		db.Create(newBookmarkEntity)
