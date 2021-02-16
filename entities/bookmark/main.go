@@ -5,13 +5,13 @@ import (
 )
 
 type BookmarkEntity struct {
-	ID          uint `gorm:"primaryKey"`
-	UserId      uint
+	ID          uint64 `gorm:"primaryKey"`
+	UserId      uint64
 	Url         string
 	Title       string
 	CustomTitle string
-	RemarkCount uint
-	ClickCount  uint
+	RemarkCount uint64
+	ClickCount  uint64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

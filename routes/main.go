@@ -14,6 +14,8 @@ var (
 	router = gin.Default()
 )
 
+// TODO should the swagger host var can be overwritten by a env parameter?
+
 // @title api TODO
 // @version 1.0
 // @description This is a sample server TODO
@@ -22,6 +24,7 @@ var (
 // @BasePath /v1
 func Run() {
 	url := ginSwagger.URL("http://localhost:8080/swagger/doc.json") // The url pointing to API definition
+	//TODO not sure if still needed
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	router.Use(gin.CustomRecovery(func(c *gin.Context, recovered interface{}) {
@@ -31,6 +34,8 @@ func Run() {
 		}
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}))
+	//TODO only do this in dev mode?
+	router.Static("/static", "./static")
 	getRoutes()
 	router.Run(":8080")
 }
