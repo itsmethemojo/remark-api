@@ -6,7 +6,7 @@ import (
 	//"gorm.io/driver/mysql"
 	//"gorm.io/gorm"
 	//. "../../entities/bookmark"
-	bookmarkRepository "../../repositories/bookmark"
+	. "../../repositories/bookmark"
 	//"time"
 )
 
@@ -20,16 +20,16 @@ type BookmarkModel struct {
 // @Success 200 {object} string
 // @Param user_id query int true "user id from bookmark owner"
 // @router /bookmark/ [get]
-func (this BookmarkModel) ListAll(userID string) (bookmarkRepository.AllBookmarkData, error) {
+func (this BookmarkModel) ListAll(userID string) (AllBookmarkData, error) {
 	// TODO also add http response code
 	// right now error is always nil
 	// TODO check authentification user should be logged in
 	parsedUserId, parseErr := strconv.ParseUint(userID, 10, 32)
 	if parseErr != nil {
-		emptyData := bookmarkRepository.AllBookmarkData{}
+		emptyData := AllBookmarkData{}
 		return emptyData, parseErr
 	}
-	bookmarkRepository := bookmarkRepository.BookmarkRepository{}
+	bookmarkRepository := BookmarkRepository{}
 	return bookmarkRepository.ListAll(parsedUserId), nil //TODO check if err needed
 }
 
@@ -46,7 +46,7 @@ func (this BookmarkModel) Remark(userID string, url string) error {
 	if parseErr != nil {
 		return parseErr
 	}
-	bookmarkRepository := bookmarkRepository.BookmarkRepository{}
+	bookmarkRepository := BookmarkRepository{}
 	repositoryError := bookmarkRepository.Remark(parsedUserId, url)
 	return repositoryError
 }
@@ -69,7 +69,7 @@ func (this BookmarkModel) Click(userID string, id string) error {
 	if parsedIDError != nil  {
 		return parsedIDError
 	}
-	bookmarkRepository := bookmarkRepository.BookmarkRepository{}
+	bookmarkRepository := BookmarkRepository{}
 	repositoryError := bookmarkRepository.Click(parsedUserID, parsedID)
 	return repositoryError
 }
