@@ -6,7 +6,7 @@ import (
 	"log"
 	"github.com/gin-gonic/gin"
 
-	"../models/bookmark"
+	. "../models/bookmark"
 	//repository "../repositories/bookmark"
 )
 
@@ -20,7 +20,7 @@ func addBookmarkRoutes(rg *gin.RouterGroup) {
 		// if user_id gets mandatory it should not be a query but a body parameter
 		// maybe other parameters should move to body to
 		// TODO add demo mode to skip authentification
-		b := bookmark.BookmarkModel{}
+		b := BookmarkModel{}
 		return_data, err := b.ListAll(c.Query("user_id"))
 		//allBookmarkData := repository.AllBookmarkData{
 		//	Bookmarks: return_data.Bookmarks,
@@ -38,7 +38,7 @@ func addBookmarkRoutes(rg *gin.RouterGroup) {
 
 	bookmarks.GET("/remark/", func(c *gin.Context) {
 		// TODO handle authentification later
-		b := bookmark.BookmarkModel{}
+		b := BookmarkModel{}
 		remarkError := b.Remark(c.Query("user_id"), c.Query("remark"))
 		if remarkError == nil {
 			c.JSON(http.StatusOK, "everything is fine. TODO add status array")
@@ -51,7 +51,7 @@ func addBookmarkRoutes(rg *gin.RouterGroup) {
 
 	bookmarks.GET("/click/", func(c *gin.Context) {
 		// TODO handle authentification later
-		b := bookmark.BookmarkModel{}
+		b := BookmarkModel{}
 		clickError := b.Click(c.Query("user_id"), c.Query("id"))
 		if clickError == nil {
 			c.JSON(http.StatusOK, "everything is fine. TODO add status array")

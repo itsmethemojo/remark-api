@@ -29,4 +29,5 @@ this is a refactor try with go framwork gin-gonic of the formar php applciation
 
 1 use dotenv to retrieve database string
 2 return error class that includes the api response code
-3 see if import naming can be improved `repository "../repositories/bookmark"`
+3 improve naming of AllBookmarkData
+4 add debug logs
