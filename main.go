@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./routes"
 	bookmarkRepository "./repositories/bookmark"
+	"./routes"
 )
 
 func main() {

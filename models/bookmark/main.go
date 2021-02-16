@@ -1,37 +1,40 @@
 package bookmark
 
 import (
-	"errors"
+	//"errors"
 	//"gorm.io/driver/mysql"
 	//"gorm.io/gorm"
-	"time"
+	. "../../entities/bookmark"
 	bookmarkRepository "../../repositories/bookmark"
+	//"time"
 )
 
 type BookmarkModel struct {
-	UserId int
+	UserId uint64
 }
 
-type Product struct {
-	ID        uint `gorm:"primaryKey"`
-	Code      string
-	Price     uint
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
-// @Description get Foo
-// @ID get-foo
+// @Description get all bookmarks for user
+// @ID bookmark
 // @Accept json
 // @Produce json
 // @Success 200 {object} string
-// @Router /testapi/get-foo [get]mon error
-// @router /bookmark [get]
-func (b BookmarkModel) GetAll() (string, error) {
+// @Param user_id query int true "user id from bookmark owner"
+// @router /bookmark/ [get]
+func (b BookmarkModel) ListAll() ([]BookmarkEntity, error) {
 	// TODO also add http response code
-	//panic("foo")
-	//bookmarkRepository.Remark("https://itsmethemojo.eu/remark/")
-	bookmarkRepository.Remark("https://itsmethemojo.eu/")
-	err_1 := errors.New("Error message_1: ")
-	return "all bookmarks", err_1
+	// right now error is always nil
+	// TODO check authentification user should be logged in
+	return bookmarkRepository.ListAll(b.UserId), nil
+}
+
+// @Description bookmark an url
+// @ID bookmark-remark
+// @Accept json
+// @Produce json
+// @Success 200 {object} string
+// @Param user_id query int true "user id from bookmark owner"
+// @Param remark query string true "url to be bookmarked"
+// @router /bookmark/remark/ [get]
+func (b BookmarkModel) Remark(url string) error {
+	return bookmarkRepository.Remark(b.UserId, url)
 }
