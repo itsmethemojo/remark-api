@@ -46,7 +46,7 @@ func (this BookmarkRepository) ListAll(userID uint64) AllBookmarkData {
 	var remarkEntities []RemarkEntity
 	db.Raw("SELECT r.id, r.bookmark_id, r.created_at FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ?", userID).Find(&remarkEntities)
 	var clickEntities []ClickEntity
-	db.Raw("SELECT c.id, c.bookmark_id, c.created_at FROM bookmark_entities b JOIN remark_entities c ON b.id = c.bookmark_id WHERE b.user_id = ?", userID).Find(&clickEntities)
+	db.Raw("SELECT c.id, c.bookmark_id, c.created_at FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ?", userID).Find(&clickEntities)
 
 	allBookmarkData := AllBookmarkData{
 		Bookmarks: bookmarkEntities,
