@@ -86,7 +86,7 @@ func (this BookmarkRepository) Remark(userID uint64, url string) error {
 	}
 	db.Create(newRemarkEntity)
 	var bookmarkEntities []BookmarkEntity
-	remarkCountResult := db.Raw("SELECT * FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ?", userID).Find(&bookmarkEntities)
+	remarkCountResult := db.Raw("SELECT * FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ? AND r.bookmark_id = ?", userID, existingBookmarkEntity.ID).Find(&bookmarkEntities)
 	existingBookmarkEntity.RemarkCount = uint64(remarkCountResult.RowsAffected)
 	db.Save(existingBookmarkEntity)
 
@@ -109,7 +109,7 @@ func (this BookmarkRepository) Click(userID uint64, bookmarkId uint64) error {
 	}
 	db.Create(newClickEntity)
 	var bookmarkEntities []BookmarkEntity
-	remarkCountResult := db.Raw("SELECT * FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ?", userID).Find(&bookmarkEntities)
+	remarkCountResult := db.Raw("SELECT * FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ? AND c.bookmark_id = ?", userID, existingBookmarkEntity.ID).Find(&bookmarkEntities)
 	existingBookmarkEntity.RemarkCount = uint64(remarkCountResult.RowsAffected)
 	db.Save(existingBookmarkEntity)
 	return nil

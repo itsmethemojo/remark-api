@@ -21,6 +21,7 @@ func (this BookmarkModel) ListAll(userID string) (AllBookmarkData, error) {
 }
 
 func (this BookmarkModel) Remark(userID string, url string) error {
+	log.Printf("[INFO] url \"%v\"", url) //TODO remove
 	parsedUserId, parseErr := strconv.ParseUint(userID, 10, 32)
 	if parseErr != nil {
 		log.Printf("[ERROR] could not convert userID \"%v\" into uint64", userID)

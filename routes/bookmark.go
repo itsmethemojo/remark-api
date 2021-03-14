@@ -15,8 +15,8 @@ func addBookmarkRoutes(rg *gin.RouterGroup) {
 
 	bookmarks := rg.Group("/bookmark")
 	bookmarks.GET("/", routeBookmarks)
-	bookmarks.GET("/remark/", routeBookmarksRemark)
-	bookmarks.GET("/click/", routeBookmarksClick)
+	bookmarks.POST("/remark/", routeBookmarksRemark)
+	bookmarks.POST("/click/", routeBookmarksClick)
 }
 
 // @Description get all bookmarks for user
@@ -24,7 +24,7 @@ func addBookmarkRoutes(rg *gin.RouterGroup) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} string
-// @Param AUTH_TOKEN header string true "authorization token"
+// @Param AUTH_TOKEN header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
 // @router /bookmark/ [get]
 func routeBookmarks(c *gin.Context) {
 	a := AuthentificationModel{}
@@ -42,16 +42,16 @@ func routeBookmarks(c *gin.Context) {
 	c.JSON(http.StatusOK, return_data)
 }
 
-//TODO seitch to post
+//TODO this body definition just works for one parameter
 
 // @Description bookmark an url
 // @ID bookmark-remark
-// @Accept json
+// @Accept application/x-www-form-urlencoded
 // @Produce json
 // @Success 200 {object} string
-// @Param AUTH_TOKEN header string true "authorization token"
-// @Param remark query string true "url to be bookmarked"
-// @router /bookmark/remark/ [get]
+// @Param AUTH_TOKEN header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
+// @Param URL body string true "url to be bookmarked, use format URL="
+// @router /bookmark/remark/ [post]
 func routeBookmarksRemark(c *gin.Context) {
 	a := AuthentificationModel{}
 	userID, authError := a.GetUserID(c.Request.Header.Get("AUTH_TOKEN"))
@@ -60,7 +60,7 @@ func routeBookmarksRemark(c *gin.Context) {
 		return
 	}
 	b := BookmarkModel{}
-	remarkError := b.Remark(userID, c.Query("remark"))
+	remarkError := b.Remark(userID, c.PostForm("URL"))
 	if remarkError != nil {
 		// TODO retreive response text and code from model -> no error handling needed
 		c.JSON(http.StatusInternalServerError, map[string]string{"message": "something is wrong"})
@@ -69,16 +69,14 @@ func routeBookmarksRemark(c *gin.Context) {
 	c.JSON(http.StatusCreated, map[string]string{"message": "ok"})
 }
 
-//TODO seitch to post
-
 // @Description save a bookmark click
 // @ID bookmark-click
-// @Accept json
+// @Accept application/x-www-form-urlencoded
 // @Produce json
 // @Success 200 {object} string
-// @Param AUTH_TOKEN header string true "authorization token"
-// @Param id query string true "bookmark id of the clicked bookmark"
-// @router /bookmark/click/ [get]
+// @Param AUTH_TOKEN header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
+// @Param ID body string true "bookmark id of the clicked bookmark, use format ID="
+// @router /bookmark/click/ [post]
 func routeBookmarksClick(c *gin.Context) {
 	a := AuthentificationModel{}
 	userID, authError := a.GetUserID(c.Request.Header.Get("AUTH_TOKEN"))
@@ -87,7 +85,7 @@ func routeBookmarksClick(c *gin.Context) {
 		return
 	}
 	b := BookmarkModel{}
-	clickError := b.Click(userID, c.Query("id"))
+	clickError := b.Click(userID, c.PostForm("ID"))
 	if clickError != nil {
 		http_code := http.StatusInternalServerError
 		message := "Internal Server Error"
