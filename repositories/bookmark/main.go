@@ -27,7 +27,6 @@ func (this BookmarkRepository) getDB() *gorm.DB {
 	return db
 }
 
-//TODO extract database connect to a private function or init
 func (this BookmarkRepository) InitializeDatabase() {
 	db := this.getDB()
 	bookmarkEntityMigrateError := db.AutoMigrate(&BookmarkEntity{})
@@ -89,9 +88,6 @@ func (this BookmarkRepository) Remark(userID uint64, url string) error {
 	remarkCountResult := db.Raw("SELECT * FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ? AND r.bookmark_id = ?", userID, existingBookmarkEntity.ID).Find(&bookmarkEntities)
 	existingBookmarkEntity.RemarkCount = uint64(remarkCountResult.RowsAffected)
 	db.Save(existingBookmarkEntity)
-
-	//TODO only increase remark count and write remark entry
-	// see https://gorm.io/docs/update.html
 	return nil
 }
 
