@@ -22,7 +22,7 @@ func Run() {
 	//TODO rename this .env.default variable
 	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, os.Getenv("HTTPS_OR_HTTPS"))
 	docs.SwaggerInfo.Host = os.Getenv("HOST") + ":" + os.Getenv("PORT")
-	//TODO read host,schemes from .env with useful defaults
+	//TODO not sure if this works well with single binary builds
 	url := ginSwagger.URL("http://localhost:8080/swagger/doc.json") // The url pointing to API definition
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
