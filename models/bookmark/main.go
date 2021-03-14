@@ -19,6 +19,7 @@ type BookmarkModel struct {
 // @Produce json
 // @Success 200 {object} string
 // @Param user_id query int true "user id from bookmark owner"
+// @Param Auth-Token header string true "Auth-Token"
 // @router /bookmark/ [get]
 func (this BookmarkModel) ListAll(userID string) (AllBookmarkData, error) {
 	// TODO also add http response code
