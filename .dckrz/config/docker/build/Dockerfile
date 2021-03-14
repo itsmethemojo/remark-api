@@ -16,6 +16,9 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 RUN go get -u -v gorm.io/gorm && \
     go get -u -v gorm.io/driver/mysql
 
+
+RUN go get -u -v github.com/joho/godotenv
+
 WORKDIR /src
 
 EXPOSE 8080

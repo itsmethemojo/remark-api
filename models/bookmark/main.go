@@ -62,11 +62,11 @@ func (this BookmarkModel) Remark(userID string, url string) error {
 func (this BookmarkModel) Click(userID string, id string) error {
 	parsedUserID, parsedUserIdError := strconv.ParseUint(userID, 10, 32)
 	parsedID, parsedIDError := strconv.ParseUint(id, 10, 32)
-	if parsedUserIdError != nil  {
+	if parsedUserIdError != nil {
 		//TODO return message should say parameter type mismatch
 		return parsedUserIdError
 	}
-	if parsedIDError != nil  {
+	if parsedIDError != nil {
 		return parsedIDError
 	}
 	bookmarkRepository := BookmarkRepository{}

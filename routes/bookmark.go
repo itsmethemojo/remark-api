@@ -3,8 +3,8 @@ package routes
 import (
 	"net/http"
 	//"fmt"
-	"log"
 	"github.com/gin-gonic/gin"
+	//"log"
 
 	. "../models/bookmark"
 	//repository "../repositories/bookmark"
@@ -26,7 +26,6 @@ func addBookmarkRoutes(rg *gin.RouterGroup) {
 		//	Bookmarks: return_data.Bookmarks,
 		//}
 
-		log.Println("%v", return_data)
 		if err == nil {
 			c.JSON(http.StatusOK, return_data)
 		} else {
