@@ -17,13 +17,13 @@ type BookmarkEntity struct {
 }
 
 type RemarkEntity struct {
-	ID          uint64 `gorm:"primaryKey"`
-	BookmarkID  uint64
-	CreatedAt   time.Time
+	ID         uint64 `gorm:"primaryKey"`
+	BookmarkID uint64
+	CreatedAt  time.Time
 }
 
 type ClickEntity struct {
-	ID          uint64 `gorm:"primaryKey"`
-	BookmarkID  uint64
-	CreatedAt   time.Time
+	ID         uint64 `gorm:"primaryKey"`
+	BookmarkID uint64
+	CreatedAt  time.Time
 }

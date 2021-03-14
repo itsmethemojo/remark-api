@@ -1,30 +1,29 @@
 package routes
 
 import (
+	"../docs"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
-
-	_ "../docs"
+	"os"
 )
 
 var (
 	router = gin.Default()
 )
 
-// TODO should the swagger host var can be overwritten by a env parameter?
-
-// @title api TODO
+// @title reMARK
 // @version 1.0
-// @description This is a sample server TODO
-
-// @host localhost:8080
+// @description an API to bookmark URLs and also sort them over time by usage or re-bookmarks
 // @BasePath /v1
 func Run() {
+	//TODO rename this .env.default variable
+	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, os.Getenv("HTTPS_OR_HTTPS"))
+	docs.SwaggerInfo.Host = os.Getenv("HOST") + ":" + os.Getenv("PORT")
+	//TODO read host,schemes from .env with useful defaults
 	url := ginSwagger.URL("http://localhost:8080/swagger/doc.json") // The url pointing to API definition
-	//TODO not sure if still needed
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	router.Use(gin.CustomRecovery(func(c *gin.Context, recovered interface{}) {
@@ -34,10 +33,10 @@ func Run() {
 		}
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}))
-	//TODO only do this in dev mode?
-	router.Static("/static", "./static")
+	//TODO maybe use this to also host frontend
+	// router.Static("/static", "./static")
 	getRoutes()
-	router.Run(":8080")
+	router.Run(":" + os.Getenv("PORT"))
 }
 
 // getRoutes will create our routes of our entire application
