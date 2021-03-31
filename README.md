@@ -13,7 +13,7 @@ this is a refactor try with go framwork gin-gonic of the formar php applciation
 
 ## start server local
 
-`./local-server.sh`
+`task build && docker-compose up -d --force-recreate`
 
 ## see swagger api documentation
 
