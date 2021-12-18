@@ -96,9 +96,7 @@ func (this BookmarkRepository) Click(userID uint64, bookmarkId uint64) error {
 	var existingBookmarkEntity BookmarkEntity
 	initialSearchResult := db.First(&existingBookmarkEntity, bookmarkId)
 	if errors.Is(initialSearchResult.Error, gorm.ErrRecordNotFound) {
-		panic("not found")
-		// TODO return a not found error that causes notfound http respionse code
-		// return nil
+		return errors.New("entity not found")
 	}
 	newClickEntity := &ClickEntity{
 		BookmarkID: existingBookmarkEntity.ID,
@@ -107,6 +105,20 @@ func (this BookmarkRepository) Click(userID uint64, bookmarkId uint64) error {
 	var bookmarkEntities []BookmarkEntity
 	remarkCountResult := db.Raw("SELECT * FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ? AND c.bookmark_id = ?", userID, existingBookmarkEntity.ID).Find(&bookmarkEntities)
 	existingBookmarkEntity.RemarkCount = uint64(remarkCountResult.RowsAffected)
+	db.Save(existingBookmarkEntity)
+	return nil
+}
+
+func (this BookmarkRepository) Edit(userID uint64, bookmarkId uint64, bookmarkTitle string) error {
+	db := this.getDB()
+	var existingBookmarkEntity BookmarkEntity
+	initialSearchResult := db.First(&existingBookmarkEntity, "id = ? AND user_id = ?", bookmarkId, userID)
+
+	if errors.Is(initialSearchResult.Error, gorm.ErrRecordNotFound) {
+		return errors.New("entity not found")
+	}
+
+	existingBookmarkEntity.Title = bookmarkTitle
 	db.Save(existingBookmarkEntity)
 	return nil
 }
