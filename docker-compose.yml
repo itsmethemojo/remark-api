@@ -7,8 +7,7 @@ services:
       MYSQL_DATABASE: remark
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
   app:
-    build: .dckrz/config/docker/build
-    command: "go run main.go"
+    build: .
     ports:
       - "8080:8080"
     links:
@@ -16,5 +15,4 @@ services:
     depends_on:
       - database
     volumes:
-    - ".:/app"
-    working_dir: /app
+      - ${PWD}/.env:/app/.env
