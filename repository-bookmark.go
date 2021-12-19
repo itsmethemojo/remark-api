@@ -1,8 +1,7 @@
-package bookmark
+package main
 
 import (
 	//"time"
-	. "../../entities/bookmark"
 	"errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

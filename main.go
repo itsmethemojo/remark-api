@@ -1,8 +1,6 @@
 package main
 
 import (
-	. "./repositories/bookmark"
-	"./routes"
 	"github.com/joho/godotenv"
 )
 
@@ -12,5 +10,5 @@ func main() {
 	//TODO init connection and database migration might be done lazy calling the first route
 	bookmarkRepository := BookmarkRepository{}
 	bookmarkRepository.InitializeDatabase()
-	routes.Run()
+	RoutesRun()
 }

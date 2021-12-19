@@ -1,7 +1,7 @@
-package routes
+package main
 
 import (
-	"../docs"
+	"./docs"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -18,7 +18,7 @@ var (
 // @version 1.0
 // @description an API to bookmark URLs and also sort them over time by usage or re-bookmarks
 // @BasePath /v1
-func Run() {
+func RoutesRun() {
 	//TODO rename this .env.default variable
 	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, os.Getenv("HTTPS_OR_HTTPS"))
 	docs.SwaggerInfo.Host = os.Getenv("HOST") + ":" + os.Getenv("PORT")
