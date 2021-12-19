@@ -1,4 +1,4 @@
-package bookmark
+package main
 
 import (
 	"time"

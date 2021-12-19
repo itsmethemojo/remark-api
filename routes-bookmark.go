@@ -1,14 +1,10 @@
-package routes
+package main
 
 import (
 	"net/http"
-	"time"
 	//"fmt"
 	"github.com/gin-gonic/gin"
 	//"log"
-
-	. "../models/authentification"
-	. "../models/bookmark"
 	//repository "../repositories/bookmark"
 )
 
@@ -133,31 +129,4 @@ func routeBookmarksEdit(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, map[string]string{"message": "ok"})
-}
-
-//TODO classes for swagger can somehow not be imported
-//TODO use import from entities instead
-
-type BookmarkEntity struct {
-	ID          uint64 `gorm:"primaryKey"`
-	UserID      uint64
-	Url         string
-	Title       string
-	CustomTitle string
-	RemarkCount uint64
-	ClickCount  uint64
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-}
-
-type RemarkEntity struct {
-	ID         uint64 `gorm:"primaryKey"`
-	BookmarkID uint64
-	CreatedAt  time.Time
-}
-
-type ClickEntity struct {
-	ID         uint64 `gorm:"primaryKey"`
-	BookmarkID uint64
-	CreatedAt  time.Time
 }

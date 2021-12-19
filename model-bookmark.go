@@ -1,7 +1,6 @@
-package bookmark
+package main
 
 import (
-	. "../../repositories/bookmark"
 	"log"
 	"strconv"
 )

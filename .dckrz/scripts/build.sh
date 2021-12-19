@@ -1,4 +1,5 @@
 #!/bin/bash
 
-swag init -g routes/main.go && \
-go build main.go
+rm -rf main docs && \
+swag init -g routes-init.go && \
+go build  -o main *.go
