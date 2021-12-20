@@ -1,11 +1,8 @@
 package main
 
 import (
-	"net/http"
-	//"fmt"
 	"github.com/gin-gonic/gin"
-	//"log"
-	//repository "../repositories/bookmark"
+	"net/http"
 )
 
 type CreateJSONResult struct {

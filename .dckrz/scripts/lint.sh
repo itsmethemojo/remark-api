@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GO_FILES=$(find . -type f -name "*.go" | grep -v '/docs/' | xargs)
+GO_FILES=$(find . -type f -name "*.go" | grep -v '/.dckrz/' | xargs)
 
 echo '==============================='
 echo '> gofmt (including autofixing)'
@@ -14,4 +14,4 @@ golint $GO_FILES
 echo '==============================='
 echo '> golangci-lint'
 echo '==============================='
-golangci-lint run --skip-dirs docs
+golangci-lint run
