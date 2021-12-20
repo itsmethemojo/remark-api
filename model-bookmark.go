@@ -62,3 +62,19 @@ func (this BookmarkModel) Edit(userID string, id string, title string) error {
 	repositoryError := bookmarkRepository.Edit(parsedUserID, parsedID, title)
 	return repositoryError
 }
+
+func (this BookmarkModel) Delete(userID string, id string) error {
+	parsedUserID, parsedUserIdError := strconv.ParseUint(userID, 10, 32)
+	parsedID, parsedIDError := strconv.ParseUint(id, 10, 32)
+	if parsedUserIdError != nil {
+		log.Printf("[ERROR] could not convert userID \"%v\" into uint64", userID)
+		return parsedUserIdError
+	}
+	if parsedIDError != nil {
+		log.Printf("[ERROR] could not convert bookmark id \"%v\" into uint64", userID)
+		return parsedIDError
+	}
+	bookmarkRepository := BookmarkRepository{}
+	repositoryError := bookmarkRepository.Delete(parsedUserID, parsedID)
+	return repositoryError
+}

@@ -120,3 +120,18 @@ func (this BookmarkRepository) Edit(userID uint64, bookmarkId uint64, bookmarkTi
 	db.Save(existingBookmarkEntity)
 	return nil
 }
+
+func (this BookmarkRepository) Delete(userID uint64, bookmarkId uint64) error {
+	db := this.getDB()
+	var existingBookmarkEntity BookmarkEntity
+	initialSearchResult := db.First(&existingBookmarkEntity, "id = ? AND user_id = ?", bookmarkId, userID)
+
+	if errors.Is(initialSearchResult.Error, gorm.ErrRecordNotFound) {
+		return errors.New("entity not found")
+	}
+
+	db.Exec("DELETE FROM click_entities WHERE bookmark_id = ?", bookmarkId)
+	db.Exec("DELETE FROM remark_entities WHERE bookmark_id = ?", bookmarkId)
+	db.Delete(existingBookmarkEntity)
+	return nil
+}
