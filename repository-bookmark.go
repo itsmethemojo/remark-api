@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"github.com/antchfx/htmlquery"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"os"
@@ -54,21 +55,24 @@ func (this BookmarkRepository) ListAll(userID uint64) AllBookmarkData {
 
 func (this BookmarkRepository) Remark(userID uint64, url string) error {
 	db := this.getDB()
-	//db.First(&product, 1)                 // find product with integer primary key
 	var existingBookmarkEntity BookmarkEntity
 	initialSearchResult := db.First(&existingBookmarkEntity, "url = ? AND user_id = ?", url, userID)
-	//log.Println(result.RowsAffected)
-	//log.Println(result.Error)
-	//TODO https://github.com/dyatlov/go-htmlinfo
-	// check for canonical url and title
-	// if canonical url is given save that one?
 
 	if errors.Is(initialSearchResult.Error, gorm.ErrRecordNotFound) {
+		var title string
+		title = url
+		doc, fetchHtmlError := htmlquery.LoadURL(url)
+		if fetchHtmlError == nil {
+			titleNode := htmlquery.FindOne(doc, "//head/title")
+			if titleNode != nil {
+				title = htmlquery.InnerText(titleNode)
+			}
+		}
 		newBookmarkEntity := &BookmarkEntity{
 			Url:         url,
-			UserID:      userID, //TODO retrieve
-			Title:       url,    //TODO retrieve bx curling url with same useragent
-			RemarkCount: 1,      //TODO check if it starts with 0
+			UserID:      userID,
+			Title:       title,
+			RemarkCount: 1,
 			ClickCount:  0,
 		}
 		db.Create(newBookmarkEntity)
