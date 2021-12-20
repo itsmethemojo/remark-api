@@ -13,7 +13,7 @@ this is a refactor try with go framwork gin-gonic of the formar php applciation
 
 ## start server local
 
-`task build && docker-compose up -d --build`
+`docker-compose up -d --build`
 
 ## see swagger api documentation
 
@@ -22,8 +22,6 @@ this is a refactor try with go framwork gin-gonic of the formar php applciation
 ## interesting task targets
 
 `task lint`
-
-`task build`
 
 ## TODO
 
