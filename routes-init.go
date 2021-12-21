@@ -14,11 +14,29 @@ var (
 	router = gin.Default()
 )
 
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", os.Getenv("Access_Control_Allow_Origin"))
+		c.Header("Access-Control-Allow-Credentials", os.Getenv("Access_Control_Allow_Credentials"))
+		c.Header("Access-Control-Allow-Headers", os.Getenv("Access_Control_Allow_Headers"))
+		c.Header("Access-Control-Allow-Methods", os.Getenv("Access_Control_Allow_Methods"))
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	}
+}
+
 // @title reMARK
 // @version 1.0
 // @description an API to bookmark URLs and also sort them over time by usage or re-bookmarks
 // @BasePath /v1
 func RoutesRun() {
+	if os.Getenv("ENABLE_CORS_HEADERS") == "1" {
+		router.Use(CORSMiddleware())
+	}
+
 	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, os.Getenv("SCHEMA"))
 	docs.SwaggerInfo.Host = os.Getenv("HOST") + ":" + os.Getenv("PORT")
 	url := ginSwagger.URL(os.Getenv("SCHEMA") + "://" + os.Getenv("HOST") + ":" + os.Getenv("PORT") + "/swagger/doc.json")
