@@ -30,11 +30,11 @@ func addBookmarkRoutes(rg *gin.RouterGroup) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} AllDataJSONResult{} "All Bookmark Data for User"
-// @Param AUTH_TOKEN header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
+// @Param Authorization header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
 // @router /bookmark/ [get]
 func routeBookmarks(c *gin.Context) {
 	a := AuthentificationModel{}
-	userID, authError := a.GetUserID(c.Request.Header.Get("AUTH_TOKEN"))
+	userID, authError := a.GetUserID(c.Request.Header.Get("Authorization"))
 	if authError != nil {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
@@ -55,12 +55,12 @@ func routeBookmarks(c *gin.Context) {
 // @Accept application/x-www-form-urlencoded
 // @Produce json
 // @Success 201 {object} CreateJSONResult{} "Entity inserted"
-// @Param AUTH_TOKEN header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
+// @Param Authorization header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
 // @Param url body string true "url to be bookmarked, use format url="
 // @router /bookmark/remark/ [post]
 func routeBookmarksRemark(c *gin.Context) {
 	a := AuthentificationModel{}
-	userID, authError := a.GetUserID(c.Request.Header.Get("AUTH_TOKEN"))
+	userID, authError := a.GetUserID(c.Request.Header.Get("Authorization"))
 	if authError != nil {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
@@ -80,12 +80,12 @@ func routeBookmarksRemark(c *gin.Context) {
 // @Accept application/x-www-form-urlencoded
 // @Produce json
 // @Success 201 {object} CreateJSONResult{} "Entity inserted"
-// @Param AUTH_TOKEN header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
+// @Param Authorization header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
 // @Param id body string true "bookmark id of the clicked bookmark, use format id="
 // @router /bookmark/click/ [post]
 func routeBookmarksClick(c *gin.Context) {
 	a := AuthentificationModel{}
-	userID, authError := a.GetUserID(c.Request.Header.Get("AUTH_TOKEN"))
+	userID, authError := a.GetUserID(c.Request.Header.Get("Authorization"))
 	if authError != nil {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
@@ -107,13 +107,13 @@ func routeBookmarksClick(c *gin.Context) {
 // @Accept application/x-www-form-urlencoded
 // @Produce json
 // @Success 201 {object} CreateJSONResult{} "Entity updated"
-// @Param AUTH_TOKEN header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
+// @Param Authorization header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
 // @Param id    path int    true "bookmark id"
 // @Param title body string true "title to change, use format title="
 // @router /bookmark/{id}/ [post]
 func routeBookmarksEdit(c *gin.Context) {
 	a := AuthentificationModel{}
-	userID, authError := a.GetUserID(c.Request.Header.Get("AUTH_TOKEN"))
+	userID, authError := a.GetUserID(c.Request.Header.Get("Authorization"))
 	if authError != nil {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
@@ -135,12 +135,12 @@ func routeBookmarksEdit(c *gin.Context) {
 // @Accept application/x-www-form-urlencoded
 // @Produce json
 // @Success 200 {object} CreateJSONResult{} "Entity deleted"
-// @Param AUTH_TOKEN header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
+// @Param Authorization header string true "authorization token" default(LOCAL_TEST_TOKEN_1)
 // @Param id    path int    true "bookmark id"
 // @router /bookmark/{id}/ [delete]
 func routeBookmarksDelete(c *gin.Context) {
 	a := AuthentificationModel{}
-	userID, authError := a.GetUserID(c.Request.Header.Get("AUTH_TOKEN"))
+	userID, authError := a.GetUserID(c.Request.Header.Get("Authorization"))
 	if authError != nil {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
