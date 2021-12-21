@@ -41,9 +41,9 @@ func (this BookmarkRepository) ListAll(userID uint64) AllBookmarkData {
 	var bookmarkEntities []BookmarkEntity
 	db.Where("user_id = ?", userID).Find(&bookmarkEntities)
 	var remarkEntities []RemarkEntity
-	db.Raw("SELECT r.id, r.bookmark_id, r.created_at FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ?", userID).Find(&remarkEntities)
+	db.Raw("SELECT r.id, r.bookmark_id, r.created_at FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ? ORDER BY r.id DESC", userID).Find(&remarkEntities)
 	var clickEntities []ClickEntity
-	db.Raw("SELECT c.id, c.bookmark_id, c.created_at FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ?", userID).Find(&clickEntities)
+	db.Raw("SELECT c.id, c.bookmark_id, c.created_at FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ? ORDER BY c.id DESC", userID).Find(&clickEntities)
 
 	allBookmarkData := AllBookmarkData{
 		Bookmarks: bookmarkEntities,
@@ -105,8 +105,8 @@ func (this BookmarkRepository) Click(userID uint64, bookmarkId uint64) error {
 	}
 	db.Create(newClickEntity)
 	var bookmarkEntities []BookmarkEntity
-	remarkCountResult := db.Raw("SELECT * FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ? AND c.bookmark_id = ?", userID, existingBookmarkEntity.ID).Find(&bookmarkEntities)
-	existingBookmarkEntity.RemarkCount = uint64(remarkCountResult.RowsAffected)
+	clickCountResult := db.Raw("SELECT * FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ? AND c.bookmark_id = ?", userID, existingBookmarkEntity.ID).Find(&bookmarkEntities)
+	existingBookmarkEntity.ClickCount = uint64(clickCountResult.RowsAffected)
 	db.Save(existingBookmarkEntity)
 	return nil
 }
