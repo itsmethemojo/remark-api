@@ -14,7 +14,7 @@ COPY go.mod go.sum /app/
 
 RUN go mod download
 
-COPY .env.default *.go /app/
+COPY *.go /app/
 
 RUN /swag init -g routes-init.go -o /usr/local/go/src/docs && \
     go build  -o main *.go && \
@@ -22,7 +22,7 @@ RUN /swag init -g routes-init.go -o /usr/local/go/src/docs && \
 
 FROM gcr.io/distroless/base-debian11
 
-COPY --from=build /app/main /app/.env.default /app/
+COPY --from=build /app/main /app/
 
 WORKDIR /app
 

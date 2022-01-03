@@ -7,7 +7,6 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
-	"os"
 )
 
 var (
@@ -16,10 +15,10 @@ var (
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", os.Getenv("Access_Control_Allow_Origin"))
-		c.Header("Access-Control-Allow-Credentials", os.Getenv("Access_Control_Allow_Credentials"))
-		c.Header("Access-Control-Allow-Headers", os.Getenv("Access_Control_Allow_Headers"))
-		c.Header("Access-Control-Allow-Methods", os.Getenv("Access_Control_Allow_Methods"))
+		c.Header("Access-Control-Allow-Origin", (EnvHelper).Get(EnvHelper{}, "ACCESS_CONTROL_ALLOW_ORIGIN"))
+		c.Header("Access-Control-Allow-Credentials", (EnvHelper).Get(EnvHelper{}, "ACCESS_CONTROL_ALLOW_CREDENTIALS"))
+		c.Header("Access-Control-Allow-Headers", (EnvHelper).Get(EnvHelper{}, "ACCESS_CONTROL_ALLOW_HEADERS"))
+		c.Header("Access-Control-Allow-Methods", (EnvHelper).Get(EnvHelper{}, "ACCESS_CONTROL_ALLOW_METHODS"))
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
 			return
@@ -33,13 +32,13 @@ func CORSMiddleware() gin.HandlerFunc {
 // @description an API to bookmark URLs and also sort them over time by usage or re-bookmarks
 // @BasePath /v1
 func RoutesRun() {
-	if os.Getenv("ENABLE_CORS_HEADERS") == "1" {
+	if (EnvHelper).Get(EnvHelper{}, "CORS_ENABLED") == "1" {
 		router.Use(CORSMiddleware())
 	}
 
-	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, os.Getenv("SCHEMA"))
-	docs.SwaggerInfo.Host = os.Getenv("HOST") + ":" + os.Getenv("PORT")
-	url := ginSwagger.URL(os.Getenv("SCHEMA") + "://" + os.Getenv("HOST") + ":" + os.Getenv("PORT") + "/swagger/doc.json")
+	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, (EnvHelper).Get(EnvHelper{}, "SCHEMA"))
+	docs.SwaggerInfo.Host = (EnvHelper).Get(EnvHelper{}, "HOST") + ":" + (EnvHelper).Get(EnvHelper{}, "PORT")
+	url := ginSwagger.URL((EnvHelper).Get(EnvHelper{}, "SCHEMA") + "://" + (EnvHelper).Get(EnvHelper{}, "HOST") + ":" + (EnvHelper).Get(EnvHelper{}, "PORT") + "/swagger/doc.json")
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	router.Use(gin.CustomRecovery(func(c *gin.Context, recovered interface{}) {
@@ -52,7 +51,7 @@ func RoutesRun() {
 	//TODO maybe use this to also host frontend
 	// router.Static("/static", "./static")
 	getRoutes()
-	router.Run(":" + os.Getenv("PORT"))
+	router.Run(":" + (EnvHelper).Get(EnvHelper{}, "PORT"))
 }
 
 func getRoutes() {
