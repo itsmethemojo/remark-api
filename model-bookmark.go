@@ -16,7 +16,8 @@ func (this BookmarkModel) ListAll(userID string) (AllBookmarkData, error) {
 		return emptyData, parseErr
 	}
 	bookmarkRepository := BookmarkRepository{}
-	return bookmarkRepository.ListAll(parsedUserId), nil //TODO check if err needed
+	bookmarkRepositoryData, repositoryError := bookmarkRepository.ListAll(parsedUserId)
+	return bookmarkRepositoryData, repositoryError
 }
 
 func (this BookmarkModel) Remark(userID string, url string) error {

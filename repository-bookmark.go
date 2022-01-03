@@ -5,7 +5,6 @@ import (
 	"github.com/antchfx/htmlquery"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"os"
 )
 
 type AllBookmarkData struct {
@@ -17,27 +16,33 @@ type AllBookmarkData struct {
 type BookmarkRepository struct {
 }
 
-func (this BookmarkRepository) getDB() *gorm.DB {
-	dsn := os.Getenv("DATABASE_URL")
-	db, connectError := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+func (this BookmarkRepository) getDB() (*gorm.DB, error)  {
+	db, connectError := gorm.Open(mysql.Open((EnvHelper).Get(EnvHelper{}, "DATABASE_URL")), &gorm.Config{})
 	if connectError != nil {
-		panic("failed to connect database")
+		return db, errors.New("could not connect to database")
 	}
-	return db
+	return db, nil
 }
 
-func (this BookmarkRepository) InitializeDatabase() {
-	db := this.getDB()
+func (this BookmarkRepository) InitializeDatabase() error {
+	db, dbConnectError := this.getDB()
+	if dbConnectError != nil {
+		return dbConnectError
+	}
 	bookmarkEntityMigrateError := db.AutoMigrate(&BookmarkEntity{})
 	remarkEntityMigrateError := db.AutoMigrate(&RemarkEntity{})
 	clickEntityMigrateError := db.AutoMigrate(&ClickEntity{})
 	if bookmarkEntityMigrateError != nil || remarkEntityMigrateError != nil || clickEntityMigrateError != nil {
 		panic("could not init database")
 	}
+	return nil
 }
 
-func (this BookmarkRepository) ListAll(userID uint64) AllBookmarkData {
-	db := this.getDB()
+func (this BookmarkRepository) ListAll(userID uint64) (AllBookmarkData, error) {
+	db, dbConnectError := this.getDB()
+	if dbConnectError != nil {
+		return AllBookmarkData{}, dbConnectError
+	}
 	var bookmarkEntities []BookmarkEntity
 	db.Where("user_id = ?", userID).Find(&bookmarkEntities)
 	var remarkEntities []RemarkEntity
@@ -50,11 +55,14 @@ func (this BookmarkRepository) ListAll(userID uint64) AllBookmarkData {
 		Remarks:   remarkEntities,
 		Clicks:    clickEntities,
 	}
-	return allBookmarkData
+	return allBookmarkData, nil
 }
 
 func (this BookmarkRepository) Remark(userID uint64, url string) error {
-	db := this.getDB()
+	db, dbConnectError := this.getDB()
+	if dbConnectError != nil {
+		return dbConnectError
+	}
 	var existingBookmarkEntity BookmarkEntity
 	initialSearchResult := db.First(&existingBookmarkEntity, "url = ? AND user_id = ?", url, userID)
 
@@ -94,7 +102,10 @@ func (this BookmarkRepository) Remark(userID uint64, url string) error {
 }
 
 func (this BookmarkRepository) Click(userID uint64, bookmarkId uint64) error {
-	db := this.getDB()
+	db, dbConnectError := this.getDB()
+	if dbConnectError != nil {
+		return dbConnectError
+	}
 	var existingBookmarkEntity BookmarkEntity
 	initialSearchResult := db.First(&existingBookmarkEntity, bookmarkId)
 	if errors.Is(initialSearchResult.Error, gorm.ErrRecordNotFound) {
@@ -112,7 +123,10 @@ func (this BookmarkRepository) Click(userID uint64, bookmarkId uint64) error {
 }
 
 func (this BookmarkRepository) Edit(userID uint64, bookmarkId uint64, bookmarkTitle string) error {
-	db := this.getDB()
+	db, dbConnectError := this.getDB()
+	if dbConnectError != nil {
+		return dbConnectError
+	}
 	var existingBookmarkEntity BookmarkEntity
 	initialSearchResult := db.First(&existingBookmarkEntity, "id = ? AND user_id = ?", bookmarkId, userID)
 
@@ -126,7 +140,10 @@ func (this BookmarkRepository) Edit(userID uint64, bookmarkId uint64, bookmarkTi
 }
 
 func (this BookmarkRepository) Delete(userID uint64, bookmarkId uint64) error {
-	db := this.getDB()
+	db, dbConnectError := this.getDB()
+	if dbConnectError != nil {
+		return dbConnectError
+	}
 	var existingBookmarkEntity BookmarkEntity
 	initialSearchResult := db.First(&existingBookmarkEntity, "id = ? AND user_id = ?", bookmarkId, userID)
 
