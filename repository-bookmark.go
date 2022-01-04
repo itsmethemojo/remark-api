@@ -16,7 +16,7 @@ type AllBookmarkData struct {
 type BookmarkRepository struct {
 }
 
-func (this BookmarkRepository) getDB() (*gorm.DB, error)  {
+func (this BookmarkRepository) getDB() (*gorm.DB, error) {
 	db, connectError := gorm.Open(mysql.Open((EnvHelper).Get(EnvHelper{}, "DATABASE_URL")), &gorm.Config{})
 	if connectError != nil {
 		return db, errors.New("could not connect to database")
@@ -32,7 +32,8 @@ func (this BookmarkRepository) InitializeDatabase() error {
 	bookmarkEntityMigrateError := db.AutoMigrate(&BookmarkEntity{})
 	remarkEntityMigrateError := db.AutoMigrate(&RemarkEntity{})
 	clickEntityMigrateError := db.AutoMigrate(&ClickEntity{})
-	if bookmarkEntityMigrateError != nil || remarkEntityMigrateError != nil || clickEntityMigrateError != nil {
+	userEntityMigrateError := db.AutoMigrate(&UserEntity{})
+	if bookmarkEntityMigrateError != nil || remarkEntityMigrateError != nil || clickEntityMigrateError != nil || userEntityMigrateError != nil {
 		panic("could not init database")
 	}
 	return nil

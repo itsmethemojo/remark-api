@@ -15,7 +15,6 @@ func main() {
 	RoutesRun()
 }
 
-
 //TODO not sure if thats the best place for this
 func MigrateDatabase() {
 	bookmarkRepository := BookmarkRepository{}
@@ -30,10 +29,10 @@ func MigrateDatabase() {
 		log.Printf("[ERROR] could not convert userID \"%v\" into uint64", (EnvHelper).Get(EnvHelper{}, "DATABASE_CONNECT_WAIT_INTERVAL"))
 		panic("DATABASE_CONNECT_WAIT_INTERVAL is not an integer")
 	}
-	for i:=0; i<int(retryCount); i++ {
+	for i := 0; i < int(retryCount); i++ {
 		error := bookmarkRepository.InitializeDatabase()
-		if error == nil{
-			break;
+		if error == nil {
+			break
 		}
 		log.Printf("[INFO] waiting another %v seconds for database to come up", waitInterval)
 		time.Sleep(time.Duration(waitInterval) * time.Second)

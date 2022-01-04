@@ -19,6 +19,13 @@ func (this AuthentificationModel) GetUserID(token string) (string, error) {
 				return splittedTokenAndID[1], nil
 			}
 		}
+	case "DATABASE_TABLE":
+		tokenRepository := TokenRepository{}
+		isValid, userID := tokenRepository.tokenIsValid(token)
+		log.Printf("[INFO] %v %v", isValid, userID)
+		if isValid {
+			return userID, nil
+		}
 	}
 
 	//TODO improve naming

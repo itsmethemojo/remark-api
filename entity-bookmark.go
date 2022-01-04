@@ -27,3 +27,8 @@ type ClickEntity struct {
 	BookmarkID uint64
 	CreatedAt  time.Time
 }
+
+type UserEntity struct {
+	ID   uint64
+	Name string `gorm:"primaryKey"`
+}
