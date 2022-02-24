@@ -9,9 +9,12 @@ type EnvHelper struct {
 
 func defaultEnvValues() map[string]string {
 	return map[string]string{
-		"HOST":                             "localhost",
+		"SWAGGER_HOST":                     "localhost",
+		"SWAGGER_PORT":                     "8080",
+		"SWAGGER_PATH":                     "/swagger",
+		"API_PATH_PREFIX":                  "",
+		"SWAGGER_SCHEMA":                   "http",
 		"PORT":                             "8080",
-		"SCHEMA":                           "http",
 		"DATABASE_URL":                     "root:rootpw@tcp(database:3306)/remark?charset=utf8mb4&parseTime=True&loc=Local",
 		"DATABASE_CONNECT_RETRY_COUNT":     "10",
 		"DATABASE_CONNECT_WAIT_INTERVAL":   "5",

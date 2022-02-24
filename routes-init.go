@@ -36,10 +36,10 @@ func RoutesRun() {
 		router.Use(CORSMiddleware())
 	}
 
-	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, (EnvHelper).Get(EnvHelper{}, "SCHEMA"))
-	docs.SwaggerInfo.Host = (EnvHelper).Get(EnvHelper{}, "HOST") + ":" + (EnvHelper).Get(EnvHelper{}, "PORT")
-	url := ginSwagger.URL((EnvHelper).Get(EnvHelper{}, "SCHEMA") + "://" + (EnvHelper).Get(EnvHelper{}, "HOST") + ":" + (EnvHelper).Get(EnvHelper{}, "PORT") + "/swagger/doc.json")
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, (EnvHelper).Get(EnvHelper{}, "SWAGGER_SCHEMA"))
+	docs.SwaggerInfo.Host = (EnvHelper).Get(EnvHelper{}, "SWAGGER_HOST") + ":" + (EnvHelper).Get(EnvHelper{}, "SWAGGER_PORT")
+	url := ginSwagger.URL((EnvHelper).Get(EnvHelper{}, "SWAGGER_SCHEMA") + "://" + (EnvHelper).Get(EnvHelper{}, "SWAGGER_HOST") + ":" + (EnvHelper).Get(EnvHelper{}, "SWAGGER_PORT") + (EnvHelper).Get(EnvHelper{}, "SWAGGER_PATH") + "/doc.json") //TODO make swagger path to env var
+	router.GET((EnvHelper).Get(EnvHelper{}, "SWAGGER_PATH") + "/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url)) //TODO make swagger path to env var
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	router.Use(gin.CustomRecovery(func(c *gin.Context, recovered interface{}) {
 		if err, ok := recovered.(string); ok {
@@ -55,6 +55,6 @@ func RoutesRun() {
 }
 
 func getRoutes() {
-	v1 := router.Group("/v1")
+	v1 := router.Group((EnvHelper).Get(EnvHelper{}, "API_PATH_PREFIX") + "/v1") //TODO make swagger pre path before /v1 to env var
 	addBookmarkRoutes(v1)
 }
