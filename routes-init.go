@@ -36,10 +36,17 @@ func RoutesRun() {
 		router.Use(CORSMiddleware())
 	}
 
-	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, (EnvHelper).Get(EnvHelper{}, "SWAGGER_SCHEMA"))
-	docs.SwaggerInfo.Host = (EnvHelper).Get(EnvHelper{}, "SWAGGER_HOST") + ":" + (EnvHelper).Get(EnvHelper{}, "SWAGGER_PORT")
-	url := ginSwagger.URL((EnvHelper).Get(EnvHelper{}, "SWAGGER_SCHEMA") + "://" + (EnvHelper).Get(EnvHelper{}, "SWAGGER_HOST") + ":" + (EnvHelper).Get(EnvHelper{}, "SWAGGER_PORT") + (EnvHelper).Get(EnvHelper{}, "SWAGGER_PATH") + "/doc.json") //TODO make swagger path to env var
-	router.GET((EnvHelper).Get(EnvHelper{}, "SWAGGER_PATH") + "/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url)) //TODO make swagger path to env var
+	host_with_port := (EnvHelper).Get(EnvHelper{}, "SWAGGER_HOST") + ":" + (EnvHelper).Get(EnvHelper{}, "SWAGGER_PORT")
+	swagger_schema := (EnvHelper).Get(EnvHelper{}, "SWAGGER_SCHEMA")
+	swagger_path := (EnvHelper).Get(EnvHelper{}, "SWAGGER_PATH")
+	base_path := (EnvHelper).Get(EnvHelper{}, "API_PATH_PREFIX") + "/v1"
+
+	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, swagger_schema)
+	docs.SwaggerInfo.Host = host_with_port
+	docs.SwaggerInfo.BasePath = base_path
+
+	url := ginSwagger.URL(swagger_schema + "://" + host_with_port + swagger_path + "/doc.json")
+	router.GET(swagger_path + "/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	router.Use(gin.CustomRecovery(func(c *gin.Context, recovered interface{}) {
 		if err, ok := recovered.(string); ok {
@@ -50,11 +57,10 @@ func RoutesRun() {
 	}))
 	//TODO maybe use this to also host frontend
 	// router.Static("/static", "./static")
-	getRoutes()
-	router.Run(":" + (EnvHelper).Get(EnvHelper{}, "PORT"))
-}
 
-func getRoutes() {
-	v1 := router.Group((EnvHelper).Get(EnvHelper{}, "API_PATH_PREFIX") + "/v1") //TODO make swagger pre path before /v1 to env var
+	//define routes
+	v1 := router.Group(base_path)
 	addBookmarkRoutes(v1)
+
+	router.Run(":" + (EnvHelper).Get(EnvHelper{}, "PORT"))
 }
