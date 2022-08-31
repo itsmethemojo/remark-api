@@ -18,18 +18,24 @@ COPY go.mod go.sum /app/
 
 RUN go mod download
 
-COPY *.go /app/
 
-RUN /swag init -g routes-init.go -o /usr/local/go/src/docs && \
-    go build  -o main *.go && \
-    chmod +x /app/main
+#RUN ls -la /app
+#COPY *.go /app/
+COPY src /app/src
+
+#RUN ls -la /app
+
+RUN cd /app/src && \
+    /swag init -g routes-init.go -o /usr/local/go/src/docs && \
+    go build  -o ../remark-api *.go && \
+    chmod +x /app/remark-api
 
 FROM $RUN_IMAGE
 
-COPY --from=build /app/main /app/
+COPY --from=build /app/remark-api /app/
 
 WORKDIR /app
 
-ENTRYPOINT ["/app/main"]
+ENTRYPOINT ["/app/remark-api"]
 
 EXPOSE 8080
