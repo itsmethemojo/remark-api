@@ -1,4 +1,4 @@
-module remark-api
+module github.com/itsmethemojo/remark-api
 
 go 1.15
 
