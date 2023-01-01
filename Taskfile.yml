@@ -169,6 +169,7 @@ tasks:
     cmds:
       - cmd: >-
           ls {{.DIRECTORY_DCKRZ_TMP}}/;
+          echo bla {{.PATH_IN_CONTAINER}};
           if [ "{{.DOCKERFILE_PATH}}" != "" ]; then
             docker build -t {{.CONTAINER_NAME}} -f {{.DOCKERFILE_PATH}} $(dirname "{{.DOCKERFILE_PATH}}");
           fi;

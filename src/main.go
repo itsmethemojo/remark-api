@@ -8,7 +8,10 @@ import (
 )
 
 func main() {
-	godotenv.Overload()
+	err := godotenv.Overload()
+	if err != nil {
+		panic("dot env loading failed")
+	}
 	//TODO init connection and database migration might be done lazy calling the first route
 	MigrateDatabase()
 	RoutesRun()

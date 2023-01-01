@@ -46,7 +46,7 @@ func RoutesRun() {
 	docs.SwaggerInfo.BasePath = base_path
 
 	url := ginSwagger.URL(swagger_schema + "://" + host_with_port + swagger_path + "/doc.json")
-	router.GET(swagger_path + "/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+	router.GET(swagger_path+"/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	router.Use(gin.CustomRecovery(func(c *gin.Context, recovered interface{}) {
 		if err, ok := recovered.(string); ok {
@@ -62,5 +62,8 @@ func RoutesRun() {
 	v1 := router.Group(base_path)
 	addBookmarkRoutes(v1)
 
-	router.Run(":" + (EnvHelper).Get(EnvHelper{}, "PORT"))
+	err := router.Run(":" + (EnvHelper).Get(EnvHelper{}, "PORT"))
+	if err != nil {
+		panic("starting webserver failed")
+	}
 }
