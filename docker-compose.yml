@@ -1,13 +1,13 @@
 version: "3.9"
 services:
   database:
-    image: mysql
+    image: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: rootpw
-      MYSQL_DATABASE: remark
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+      POSTGRES_PASSWORD: remarkpassword
   app:
     build: .
+    environment:
+      DATABASE_NAME: postgres
     ports:
       - "8080:8080"
     links:

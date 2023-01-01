@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"github.com/antchfx/htmlquery"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -17,7 +17,14 @@ type BookmarkRepository struct {
 }
 
 func (this BookmarkRepository) getDB() (*gorm.DB, error) {
-	db, connectError := gorm.Open(mysql.Open((EnvHelper).Get(EnvHelper{}, "DATABASE_URL")), &gorm.Config{})
+	dsn := "host=" + (EnvHelper).Get(EnvHelper{}, "DATABASE_HOST") +
+		" user=" + (EnvHelper).Get(EnvHelper{}, "DATABASE_USERNAME") +
+		" password=" + (EnvHelper).Get(EnvHelper{}, "DATABASE_PASSWORD") +
+		" dbname=" + (EnvHelper).Get(EnvHelper{}, "DATABASE_NAME") +
+		" port=" + (EnvHelper).Get(EnvHelper{}, "DATABASE_PORT") +
+		" sslmode=" + (EnvHelper).Get(EnvHelper{}, "DATABASE_SSLMODE") +
+		" TimeZone=" + (EnvHelper).Get(EnvHelper{}, "DATABASE_TIMEZONE")
+	db, connectError := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if connectError != nil {
 		return db, errors.New("could not connect to database")
 	}

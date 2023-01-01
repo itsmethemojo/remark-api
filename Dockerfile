@@ -1,4 +1,4 @@
-ARG BUILD_IMAGE=golang:1.15.5-buster
+ARG BUILD_IMAGE=golang:1.18-buster
 
 ARG RUN_IMAGE=gcr.io/distroless/base-debian11:latest
 
@@ -18,12 +18,9 @@ COPY go.mod go.sum /app/
 
 RUN go mod download
 
-
 #RUN ls -la /app
 #COPY *.go /app/
 COPY src /app/src
-
-#RUN ls -la /app
 
 RUN cd /app/src && \
     /swag init -g routes-init.go -o /usr/local/go/src/docs && \
