@@ -10,4 +10,7 @@ curl -X DELETE localhost:8080/v1/bookmark/
 
 echo -e "\n\nall Data cleaned \n"
 
-TEST_USER_1="Authorization: TEST_TOKEN_1" API_URI=http://localhost:8080 bats-core/bin/bats tests/api.bats
+TEST_USER_1="Authorization: TEST_TOKEN_1" \
+TEST_USER_2="Authorization: TEST_TOKEN_2" \
+API_URI=http://localhost:8080 \
+bats-core/bin/bats tests/api.bats

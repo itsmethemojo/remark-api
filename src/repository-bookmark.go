@@ -60,11 +60,12 @@ func (this BookmarkRepository) DeleteAllData() error {
 	return nil
 }
 
-func (this BookmarkRepository) ListAll(userID uint64) (AllBookmarkData, error) {
+func (this BookmarkRepository) ListAll(username string) (AllBookmarkData, error) {
 	db, dbConnectError := this.getDB()
 	if dbConnectError != nil {
 		return AllBookmarkData{}, dbConnectError
 	}
+	userID := this.getUser(db, username)
 	var bookmarkEntities []BookmarkEntity
 	db.Where("user_id = ?", userID).Find(&bookmarkEntities)
 	var remarkEntities []RemarkEntity
@@ -80,11 +81,12 @@ func (this BookmarkRepository) ListAll(userID uint64) (AllBookmarkData, error) {
 	return allBookmarkData, nil
 }
 
-func (this BookmarkRepository) Remark(userID uint64, url string) error {
+func (this BookmarkRepository) Remark(username string, url string) error {
 	db, dbConnectError := this.getDB()
 	if dbConnectError != nil {
 		return dbConnectError
 	}
+	userID := this.getUser(db, username)
 	var existingBookmarkEntities []BookmarkEntity
 	initialSearchResult := db.Where("url = ? AND user_id = ?", url, userID).Limit(1).Find(&existingBookmarkEntities)
 
@@ -123,11 +125,12 @@ func (this BookmarkRepository) Remark(userID uint64, url string) error {
 	return nil
 }
 
-func (this BookmarkRepository) Click(userID uint64, bookmarkId uint64) error {
+func (this BookmarkRepository) Click(username string, bookmarkId uint64) error {
 	db, dbConnectError := this.getDB()
 	if dbConnectError != nil {
 		return dbConnectError
 	}
+	userID := this.getUser(db, username)
 	var existingBookmarkEntity BookmarkEntity
 	initialSearchResult := db.First(&existingBookmarkEntity, bookmarkId)
 	if errors.Is(initialSearchResult.Error, gorm.ErrRecordNotFound) {
@@ -144,11 +147,12 @@ func (this BookmarkRepository) Click(userID uint64, bookmarkId uint64) error {
 	return nil
 }
 
-func (this BookmarkRepository) Edit(userID uint64, bookmarkId uint64, bookmarkTitle string) error {
+func (this BookmarkRepository) Edit(username string, bookmarkId uint64, bookmarkTitle string) error {
 	db, dbConnectError := this.getDB()
 	if dbConnectError != nil {
 		return dbConnectError
 	}
+	userID := this.getUser(db, username)
 	var existingBookmarkEntity BookmarkEntity
 	initialSearchResult := db.First(&existingBookmarkEntity, "id = ? AND user_id = ?", bookmarkId, userID)
 
@@ -161,11 +165,12 @@ func (this BookmarkRepository) Edit(userID uint64, bookmarkId uint64, bookmarkTi
 	return nil
 }
 
-func (this BookmarkRepository) Delete(userID uint64, bookmarkId uint64) error {
+func (this BookmarkRepository) Delete(username string, bookmarkId uint64) error {
 	db, dbConnectError := this.getDB()
 	if dbConnectError != nil {
 		return dbConnectError
 	}
+	userID := this.getUser(db, username)
 	var existingBookmarkEntity BookmarkEntity
 	initialSearchResult := db.First(&existingBookmarkEntity, "id = ? AND user_id = ?", bookmarkId, userID)
 
@@ -177,4 +182,13 @@ func (this BookmarkRepository) Delete(userID uint64, bookmarkId uint64) error {
 	db.Exec("DELETE FROM remark_entities WHERE bookmark_id = ?", bookmarkId)
 	db.Delete(existingBookmarkEntity)
 	return nil
+}
+
+func (this BookmarkRepository) getUser(db *gorm.DB, username string) uint64 {
+	var userEntity UserEntity
+	result := db.FirstOrCreate(&userEntity, UserEntity{Name: username})
+	if result.Error != nil {
+		panic("lazy user creation did not work")
+	}
+	return userEntity.ID
 }

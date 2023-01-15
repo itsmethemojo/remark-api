@@ -2,5 +2,5 @@ services:
   app:
     environment:
       TEST_MODE: "true"
-      DEMO_TOKENS: "TEST_TOKEN_1:20,TEST_TOKEN_2:21"
+      DEMO_TOKENS: "TEST_TOKEN_1:user1,TEST_TOKEN_2:user2"
       LOGIN_PROVIDER: "DEMO_TOKEN"

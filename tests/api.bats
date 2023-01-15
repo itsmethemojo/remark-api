@@ -138,3 +138,18 @@
   [ "$(echo $result | jq -r .Bookmarks[0].ClickCount)" == "1" ]
   [ "$(echo $result | jq '.Clicks | length')" == "1" ]
 }
+
+@test "add bookmark Y but with user 2" {
+  result="$(curl -s -X POST -H "${TEST_USER_2}" ${API_URI}/v1/bookmark/remark/ -d url=${API_URI}/swagger/doc.json)"
+  [ "$(echo $result | jq -c)" == '{"message":"ok"}' ]
+}
+
+@test "query bookmarks should have bookmark Y added for user 2" {
+  result="$(curl -s -X GET -H "${TEST_USER_2}" ${API_URI}/v1/bookmark/)"
+  [ "$(echo $result | jq -r .Bookmarks[0].Url)" == "${API_URI}/swagger/doc.json" ]
+  [ "$(echo $result | jq -r .Bookmarks[0].Title)" == "${API_URI}/swagger/doc.json" ]
+  [ "$(echo $result | jq -r .Bookmarks[0].RemarkCount)" == "1" ]
+  [ "$(echo $result | jq '.Remarks | length')" == "1" ]
+  [ "$(echo $result | jq -r .Bookmarks[0].ClickCount)" == "0" ]
+  [ "$(echo $result | jq '.Clicks | length')" == "0" ]
+}
