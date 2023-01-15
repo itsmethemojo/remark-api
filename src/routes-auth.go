@@ -50,7 +50,7 @@ func routeStart(c *gin.Context) {
 	//TODO i think there is a function building this url
 	dex_uri := os.Getenv("DEX_URI")
 	dex_client_id := os.Getenv("DEX_CLIENT_ID")
-	dex_redirect_uri := os.Getenv("DEX_REDIRECT_URI")
+	dex_redirect_uri := os.Getenv("APP_SCHEMA") + "://" + os.Getenv("APP_DOMAIN") + ":" + os.Getenv("APP_PORT") + "/auth/callback/"
 	dex_connector_id := os.Getenv("DEX_CONNECTOR_ID")
 	login_url := dex_uri + "/auth?client_id=" + url.QueryEscape(dex_client_id) + "&redirect_uri=" + url.QueryEscape(dex_redirect_uri) + "&connector_id=" + url.QueryEscape(dex_connector_id) + "&state=" + url.QueryEscape(auth_state) + "&response_type=code&scope=openid+profile+email"
 
@@ -80,7 +80,7 @@ func routeCallback(c *gin.Context) {
 		ClientSecret: os.Getenv("DEX_CLIENT_SECRET"),
 		Endpoint:     provider.Endpoint(),
 		Scopes:       []string{"openid", "profile", "email"},
-		RedirectURL:  os.Getenv("DEX_REDIRECT_URI"),
+		RedirectURL:  os.Getenv("APP_SCHEMA") + "://" + os.Getenv("APP_DOMAIN") + ":" + os.Getenv("APP_PORT") + "/auth/callback/",
 	}
 
 	idTokenVerifier := provider.Verifier(&oidc.Config{ClientID: os.Getenv("DEX_CLIENT_ID")})

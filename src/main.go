@@ -10,10 +10,21 @@ import (
 
 func main() {
 	err1 := godotenv.Load("default.env")
-	err2 := godotenv.Load()
-	if err1 != nil || err2 != nil{
-		panic("dot env loading failed")
+	if err1 != nil {
+		panic("default.env loading failed")
 	}
+	err2 := godotenv.Overload()
+	if err2 != nil {
+		log.Printf("[INFO] no .env file present, skip loading")
+	}
+
+	//TODO maybe this can be removed
+	if os.Getenv("TEST_MODE") == "true" {
+		for _, env := range os.Environ() {
+			log.Printf("[DEBUG] \"%v\" into uint64", env)
+		}
+	}
+
 	//TODO init connection and database migration might be done lazy calling the first route
 	MigrateDatabase()
 	RoutesRun()
