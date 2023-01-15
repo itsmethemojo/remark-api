@@ -14,73 +14,47 @@ func (this BookmarkModel) DeleteAllData() error {
 	return repositoryError
 }
 
-func (this BookmarkModel) ListAll(userID string) (AllBookmarkData, error) {
-	parsedUserId, parseErr := strconv.ParseUint(userID, 10, 32)
-	if parseErr != nil {
-		log.Printf("[ERROR] could not convert userID \"%v\" into uint64", userID)
-		emptyData := AllBookmarkData{}
-		return emptyData, parseErr
-	}
+func (this BookmarkModel) ListAll(username string) (AllBookmarkData, error) {
 	bookmarkRepository := BookmarkRepository{}
-	bookmarkRepositoryData, repositoryError := bookmarkRepository.ListAll(parsedUserId)
+	bookmarkRepositoryData, repositoryError := bookmarkRepository.ListAll(username)
 	return bookmarkRepositoryData, repositoryError
 }
 
-func (this BookmarkModel) Remark(userID string, url string) error {
-	parsedUserId, parseErr := strconv.ParseUint(userID, 10, 32)
-	if parseErr != nil {
-		log.Printf("[ERROR] could not convert userID \"%v\" into uint64", userID)
-		return parseErr
-	}
+func (this BookmarkModel) Remark(username string, url string) error {
 	bookmarkRepository := BookmarkRepository{}
-	repositoryError := bookmarkRepository.Remark(parsedUserId, url)
+	repositoryError := bookmarkRepository.Remark(username, url)
 	return repositoryError
 }
 
-func (this BookmarkModel) Click(userID string, id string) error {
-	parsedUserID, parsedUserIdError := strconv.ParseUint(userID, 10, 32)
+func (this BookmarkModel) Click(username string, id string) error {
 	parsedID, parsedIDError := strconv.ParseUint(id, 10, 32)
-	if parsedUserIdError != nil {
-		log.Printf("[ERROR] could not convert userID \"%v\" into uint64", userID)
-		return parsedUserIdError
-	}
 	if parsedIDError != nil {
-		log.Printf("[ERROR] could not convert bookmark id \"%v\" into uint64", userID)
+		log.Printf("[ERROR] could not convert bookmark id \"%v\" into uint64", username)
 		return parsedIDError
 	}
 	bookmarkRepository := BookmarkRepository{}
-	repositoryError := bookmarkRepository.Click(parsedUserID, parsedID)
+	repositoryError := bookmarkRepository.Click(username, parsedID)
 	return repositoryError
 }
 
-func (this BookmarkModel) Edit(userID string, id string, title string) error {
-	parsedUserID, parsedUserIdError := strconv.ParseUint(userID, 10, 32)
+func (this BookmarkModel) Edit(username string, id string, title string) error {
 	parsedID, parsedIDError := strconv.ParseUint(id, 10, 32)
-	if parsedUserIdError != nil {
-		log.Printf("[ERROR] could not convert userID \"%v\" into uint64", userID)
-		return parsedUserIdError
-	}
 	if parsedIDError != nil {
-		log.Printf("[ERROR] could not convert bookmark id \"%v\" into uint64", userID)
+		log.Printf("[ERROR] could not convert bookmark id \"%v\" into uint64", username)
 		return parsedIDError
 	}
 	bookmarkRepository := BookmarkRepository{}
-	repositoryError := bookmarkRepository.Edit(parsedUserID, parsedID, title)
+	repositoryError := bookmarkRepository.Edit(username, parsedID, title)
 	return repositoryError
 }
 
-func (this BookmarkModel) Delete(userID string, id string) error {
-	parsedUserID, parsedUserIdError := strconv.ParseUint(userID, 10, 32)
+func (this BookmarkModel) Delete(username string, id string) error {
 	parsedID, parsedIDError := strconv.ParseUint(id, 10, 32)
-	if parsedUserIdError != nil {
-		log.Printf("[ERROR] could not convert userID \"%v\" into uint64", userID)
-		return parsedUserIdError
-	}
 	if parsedIDError != nil {
-		log.Printf("[ERROR] could not convert bookmark id \"%v\" into uint64", userID)
+		log.Printf("[ERROR] could not convert bookmark id \"%v\" into uint64", username)
 		return parsedIDError
 	}
 	bookmarkRepository := BookmarkRepository{}
-	repositoryError := bookmarkRepository.Delete(parsedUserID, parsedID)
+	repositoryError := bookmarkRepository.Delete(username, parsedID)
 	return repositoryError
 }

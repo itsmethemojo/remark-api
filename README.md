@@ -38,13 +38,11 @@ docker-compose -f docker-compose.yml -f docker-compose-testing.yml up -d --build
 
 1 improve test suite
 
-2 refactor user mapping since login provider will turn username string now, username have to be added in user table only when calling remark and nothing is found (then query user and add if missing)
-
 3 document available environment parameters with defaults
 
 4 add github actions
 
-5 return error class that includes the api response code
+5 check conneciton pooling https://gorm.io/docs/generic_interface.html#Connection-Pool
 
 6 improve naming of AllBookmarkData
 

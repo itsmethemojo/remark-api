@@ -9,7 +9,6 @@ type BookmarkEntity struct {
 	UserID      uint64
 	Url         string
 	Title       string
-	CustomTitle string
 	RemarkCount uint64
 	ClickCount  uint64
 	CreatedAt   time.Time
@@ -29,6 +28,6 @@ type ClickEntity struct {
 }
 
 type UserEntity struct {
-	ID   uint64
+	ID   uint64 `gorm:"autoIncrement:true"`
 	Name string `gorm:"primaryKey"`
 }
