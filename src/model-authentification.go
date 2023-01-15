@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/coreos/go-oidc/v3/oidc"
@@ -14,22 +15,22 @@ type AuthentificationModel struct {
 }
 
 func (this AuthentificationModel) GetUserID(token string) (string, error) {
-	loginProvider := (EnvHelper).Get(EnvHelper{}, "LOGIN_PROVIDER")
+	loginProvider := os.Getenv("LOGIN_PROVIDER")
 	switch loginProvider {
 	case "DEMO_TOKEN":
-		for _, tokenAndID := range strings.Split((EnvHelper).Get(EnvHelper{}, "DEMO_TOKENS"), ",") {
+		for _, tokenAndID := range strings.Split(os.Getenv("DEMO_TOKENS"), ",") {
 			splittedTokenAndID := strings.Split(tokenAndID, ":")
 			if splittedTokenAndID[0] == token {
 				return splittedTokenAndID[1], nil
 			}
 		}
 	case "DEX":
-		provider, err := oidc.NewProvider(context.Background(), (EnvHelper).Get(EnvHelper{}, "DEX_URI"))
+		provider, err := oidc.NewProvider(context.Background(), os.Getenv("DEX_URI"))
 		if err != nil {
 			panic(fmt.Sprintf("failed to get token: %v", err))
 		}
 
-		idTokenVerifier := provider.Verifier(&oidc.Config{ClientID: (EnvHelper).Get(EnvHelper{}, "DEX_CLIENT_ID")})
+		idTokenVerifier := provider.Verifier(&oidc.Config{ClientID: os.Getenv("DEX_CLIENT_ID")})
 		// token should be Bearer xxxxxxx
 		fields := strings.Split(token, " ")
 		//check if first part is Bearer

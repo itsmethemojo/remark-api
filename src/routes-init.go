@@ -7,6 +7,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
+	"os"
 )
 
 var (
@@ -15,10 +16,10 @@ var (
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", (EnvHelper).Get(EnvHelper{}, "ACCESS_CONTROL_ALLOW_ORIGIN"))
-		c.Header("Access-Control-Allow-Credentials", (EnvHelper).Get(EnvHelper{}, "ACCESS_CONTROL_ALLOW_CREDENTIALS"))
-		c.Header("Access-Control-Allow-Headers", (EnvHelper).Get(EnvHelper{}, "ACCESS_CONTROL_ALLOW_HEADERS"))
-		c.Header("Access-Control-Allow-Methods", (EnvHelper).Get(EnvHelper{}, "ACCESS_CONTROL_ALLOW_METHODS"))
+		c.Header("Access-Control-Allow-Origin", os.Getenv("ACCESS_CONTROL_ALLOW_ORIGIN"))
+		c.Header("Access-Control-Allow-Credentials", os.Getenv("ACCESS_CONTROL_ALLOW_CREDENTIALS"))
+		c.Header("Access-Control-Allow-Headers", os.Getenv("ACCESS_CONTROL_ALLOW_HEADERS"))
+		c.Header("Access-Control-Allow-Methods", os.Getenv("ACCESS_CONTROL_ALLOW_METHODS"))
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
 			return
@@ -32,14 +33,14 @@ func CORSMiddleware() gin.HandlerFunc {
 // @description an API to bookmark URLs and also sort them over time by usage or re-bookmarks
 // @BasePath /v1
 func RoutesRun() {
-	if (EnvHelper).Get(EnvHelper{}, "CORS_ENABLED") == "1" {
+	if os.Getenv("CORS_ENABLED") == "1" {
 		router.Use(CORSMiddleware())
 	}
 
-	host_with_port := (EnvHelper).Get(EnvHelper{}, "APP_DOMAIN") + ":" + (EnvHelper).Get(EnvHelper{}, "APP_PORT")
-	schema := (EnvHelper).Get(EnvHelper{}, "APP_SCHEMA")
-	swagger_path := (EnvHelper).Get(EnvHelper{}, "SWAGGER_PATH")
-	base_path := (EnvHelper).Get(EnvHelper{}, "API_PATH_PREFIX") + "/v1"
+	host_with_port := os.Getenv("APP_DOMAIN") + ":" + os.Getenv("APP_PORT")
+	schema := os.Getenv("APP_SCHEMA")
+	swagger_path := os.Getenv("SWAGGER_PATH")
+	base_path := os.Getenv("API_PATH_PREFIX") + "/v1"
 
 	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, schema)
 	docs.SwaggerInfo.Host = host_with_port
@@ -64,12 +65,12 @@ func RoutesRun() {
 
 	router.LoadHTMLGlob("templates/*")
 
-	if (EnvHelper).Get(EnvHelper{}, "LOGIN_PROVIDER") == "DEX" {
+	if os.Getenv("LOGIN_PROVIDER") == "DEX" {
 		auth := router.Group("auth")
 		addAuthRoutes(auth)
 	}
 
-	err := router.Run(":" + (EnvHelper).Get(EnvHelper{}, "APP_PORT"))
+	err := router.Run(":" + os.Getenv("APP_PORT"))
 	if err != nil {
 		panic("starting webserver failed")
 	}

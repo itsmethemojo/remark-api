@@ -36,6 +36,8 @@ COPY --from=build /app/remark-api /app/
 
 COPY templates /app/templates
 
+COPY default.env /app/default.env
+
 WORKDIR /app
 
 ENTRYPOINT ["/app/remark-api"]
