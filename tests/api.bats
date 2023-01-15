@@ -64,14 +64,14 @@
 }
 
 @test "add bookmark Y" {
-  result="$(curl -s -X POST -H "${TEST_USER_1}" ${API_URI}/v1/bookmark/remark/ -d url=${API_URI}/v1/bookmark/)"
+  result="$(curl -s -X POST -H "${TEST_USER_1}" ${API_URI}/v1/bookmark/remark/ -d url=${API_URI}/swagger/doc.json)"
   [ "$(echo $result | jq -c)" == '{"message":"ok"}' ]
 }
 
 @test "query bookmarks should have bookmark Y with remark count 1" {
   result="$(curl -s -X GET -H "${TEST_USER_1}" ${API_URI}/v1/bookmark/)"
-  [ "$(echo $result | jq -r .Bookmarks[1].Url)" == "${API_URI}/v1/bookmark/" ]
-  [ "$(echo $result | jq -r .Bookmarks[1].Title)" == "${API_URI}/v1/bookmark/" ]
+  [ "$(echo $result | jq -r .Bookmarks[1].Url)" == "${API_URI}/swagger/doc.json" ]
+  [ "$(echo $result | jq -r .Bookmarks[1].Title)" == "${API_URI}/swagger/doc.json" ]
   [ "$(echo $result | jq -r .Bookmarks[1].RemarkCount)" == "1" ]
   [ "$(echo $result | jq '.Remarks | length')" == "3" ]
   [ "$(echo $result | jq -r .Bookmarks[0].ClickCount)" == "2" ]

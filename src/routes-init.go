@@ -36,16 +36,16 @@ func RoutesRun() {
 		router.Use(CORSMiddleware())
 	}
 
-	host_with_port := (EnvHelper).Get(EnvHelper{}, "SWAGGER_HOST") + ":" + (EnvHelper).Get(EnvHelper{}, "SWAGGER_PORT")
-	swagger_schema := (EnvHelper).Get(EnvHelper{}, "SWAGGER_SCHEMA")
+	host_with_port := (EnvHelper).Get(EnvHelper{}, "APP_DOMAIN") + ":" + (EnvHelper).Get(EnvHelper{}, "APP_PORT")
+	schema := (EnvHelper).Get(EnvHelper{}, "APP_SCHEMA")
 	swagger_path := (EnvHelper).Get(EnvHelper{}, "SWAGGER_PATH")
 	base_path := (EnvHelper).Get(EnvHelper{}, "API_PATH_PREFIX") + "/v1"
 
-	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, swagger_schema)
+	docs.SwaggerInfo.Schemes = append(docs.SwaggerInfo.Schemes, schema)
 	docs.SwaggerInfo.Host = host_with_port
 	docs.SwaggerInfo.BasePath = base_path
 
-	url := ginSwagger.URL(swagger_schema + "://" + host_with_port + swagger_path + "/doc.json")
+	url := ginSwagger.URL(schema + "://" + host_with_port + swagger_path + "/doc.json")
 	router.GET(swagger_path+"/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	router.Use(gin.CustomRecovery(func(c *gin.Context, recovered interface{}) {
@@ -62,13 +62,14 @@ func RoutesRun() {
 	v1 := router.Group(base_path)
 	addBookmarkRoutes(v1)
 
+	router.LoadHTMLGlob("templates/*")
+
 	if (EnvHelper).Get(EnvHelper{}, "LOGIN_PROVIDER") == "DEX" {
-		router.LoadHTMLGlob("templates/*")
 		auth := router.Group("auth")
 		addAuthRoutes(auth)
 	}
 
-	err := router.Run(":" + (EnvHelper).Get(EnvHelper{}, "PORT"))
+	err := router.Run(":" + (EnvHelper).Get(EnvHelper{}, "APP_PORT"))
 	if err != nil {
 		panic("starting webserver failed")
 	}
