@@ -85,10 +85,10 @@ func (this BookmarkRepository) Remark(userID uint64, url string) error {
 	if dbConnectError != nil {
 		return dbConnectError
 	}
-	var existingBookmarkEntity BookmarkEntity
-	initialSearchResult := db.First(&existingBookmarkEntity, "url = ? AND user_id = ?", url, userID)
+	var existingBookmarkEntities []BookmarkEntity
+	initialSearchResult := db.Where("url = ? AND user_id = ?", url, userID).Limit(1).Find(&existingBookmarkEntities)
 
-	if errors.Is(initialSearchResult.Error, gorm.ErrRecordNotFound) {
+	if initialSearchResult.Error != nil || len(existingBookmarkEntities) == 0 {
 		var title string
 		title = url
 		doc, fetchHtmlError := htmlquery.LoadURL(url)
@@ -106,20 +106,20 @@ func (this BookmarkRepository) Remark(userID uint64, url string) error {
 			ClickCount:  0,
 		}
 		db.Create(newBookmarkEntity)
-		searchResultAfterInsert := db.First(&existingBookmarkEntity, "url = ? AND user_id = ?", url, userID)
-		if errors.Is(searchResultAfterInsert.Error, gorm.ErrRecordNotFound) {
+		searchResultAfterInsert := db.Where("url = ? AND user_id = ?", url, userID).Limit(1).Find(&existingBookmarkEntities)
+		if searchResultAfterInsert.Error != nil {
 			panic("this should never happen")
 		}
 	}
 
 	newRemarkEntity := &RemarkEntity{
-		BookmarkID: existingBookmarkEntity.ID,
+		BookmarkID: existingBookmarkEntities[0].ID,
 	}
 	db.Create(newRemarkEntity)
 	var bookmarkEntities []BookmarkEntity
-	remarkCountResult := db.Raw("SELECT * FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ? AND r.bookmark_id = ?", userID, existingBookmarkEntity.ID).Find(&bookmarkEntities)
-	existingBookmarkEntity.RemarkCount = uint64(remarkCountResult.RowsAffected)
-	db.Save(existingBookmarkEntity)
+	remarkCountResult := db.Raw("SELECT * FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ? AND r.bookmark_id = ?", userID, existingBookmarkEntities[0].ID).Find(&bookmarkEntities)
+	existingBookmarkEntities[0].RemarkCount = uint64(remarkCountResult.RowsAffected)
+	db.Save(existingBookmarkEntities[0])
 	return nil
 }
 
