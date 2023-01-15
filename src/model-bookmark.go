@@ -8,6 +8,12 @@ import (
 type BookmarkModel struct {
 }
 
+func (this BookmarkModel) DeleteAllData() error {
+	bookmarkRepository := BookmarkRepository{}
+	repositoryError := bookmarkRepository.DeleteAllData()
+	return repositoryError
+}
+
 func (this BookmarkModel) ListAll(userID string) (AllBookmarkData, error) {
 	parsedUserId, parseErr := strconv.ParseUint(userID, 10, 32)
 	if parseErr != nil {

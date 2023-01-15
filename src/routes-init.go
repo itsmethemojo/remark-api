@@ -62,6 +62,12 @@ func RoutesRun() {
 	v1 := router.Group(base_path)
 	addBookmarkRoutes(v1)
 
+	if (EnvHelper).Get(EnvHelper{}, "LOGIN_PROVIDER") == "DEX" {
+		router.LoadHTMLGlob("templates/*")
+		auth := router.Group("auth")
+		addAuthRoutes(auth)
+	}
+
 	err := router.Run(":" + (EnvHelper).Get(EnvHelper{}, "PORT"))
 	if err != nil {
 		panic("starting webserver failed")
