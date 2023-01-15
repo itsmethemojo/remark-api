@@ -33,7 +33,7 @@ func randSeq(n int) string {
 func routeStartInit(c *gin.Context) {
 	// name, value string, maxAge int, path, domain string, secure, httpOnly bool
 	// 10 min
-	c.SetCookie("auth_state", randSeq(30), 600, "/", (EnvHelper).Get(EnvHelper{}, "SWAGGER_HOST"), true, true)
+	c.SetCookie("auth_state", randSeq(30), 600, "/", (EnvHelper).Get(EnvHelper{}, "APP_DOMAIN"), true, true)
 
 	c.HTML(http.StatusOK, "start.tmpl", gin.H{
 		"title": "start authentification",
@@ -46,6 +46,7 @@ func routeStart(c *gin.Context) {
 		panic("auth_state is missing")
 	}
 
+	//TODO i think there is a function building this url
 	dex_uri := (EnvHelper).Get(EnvHelper{}, "DEX_URI")
 	dex_client_id := (EnvHelper).Get(EnvHelper{}, "DEX_CLIENT_ID")
 	dex_redirect_uri := (EnvHelper).Get(EnvHelper{}, "DEX_REDIRECT_URI")
@@ -60,6 +61,8 @@ func routeCallback(c *gin.Context) {
 	if state_err != nil {
 		panic("auth_state is missing")
 	}
+
+	//TODO this magic oauth stuff can probably be moved into the model
 
 	var (
 		err   error
@@ -90,7 +93,7 @@ func routeCallback(c *gin.Context) {
 		c.String(http.StatusInternalServerError, fmt.Sprintf("expected state %q got %q", auth_state, state))
 		return
 	}
-	token, err = oauth2Config.Exchange(c, code)
+	token, err = oauth2Config.Exchange(context.Background(), code)
 	if err != nil {
 		c.String(http.StatusInternalServerError, fmt.Sprintf("failed to get token: %v", err))
 		return
@@ -101,7 +104,7 @@ func routeCallback(c *gin.Context) {
 		return
 	}
 
-	idToken, err := idTokenVerifier.Verify(c, rawIDToken)
+	idToken, err := idTokenVerifier.Verify(context.Background(), rawIDToken)
 	if err != nil {
 		c.String(http.StatusInternalServerError, fmt.Sprintf("failed to verify ID token: %v", err))
 		return
@@ -120,8 +123,8 @@ func routeCallback(c *gin.Context) {
 	}
 
 	// 30 days
-	c.SetCookie("auth_state", "", 0, "/", (EnvHelper).Get(EnvHelper{}, "SWAGGER_HOST"), true, true)
-	c.SetCookie("Authorization", "Bearer "+rawIDToken, 2592000, "/", (EnvHelper).Get(EnvHelper{}, "SWAGGER_HOST"), true, true)
+	c.SetCookie("auth_state", "", 0, "/", (EnvHelper).Get(EnvHelper{}, "APP_DOMAIN"), true, true)
+	c.SetCookie("Authorization", "Bearer "+rawIDToken, 2592000, "/", (EnvHelper).Get(EnvHelper{}, "APP_DOMAIN"), true, true)
 
 	c.String(http.StatusOK, "Bearer "+rawIDToken)
 	// redirect to FRONTEND_URI

@@ -14,6 +14,9 @@ func defaultEnvValues() map[string]string {
 		"ACCESS_CONTROL_ALLOW_METHODS":     "POST,HEAD,PATCH, OPTIONS, GET, PUT",
 		"ACCESS_CONTROL_ALLOW_ORIGIN":      "*",
 		"API_PATH_PREFIX":                  "",
+		"APP_DOMAIN":                       "localhost",
+		"APP_PORT":                         "8080",
+		"APP_SCHEMA":                       "http",
 		"CORS_ENABLED":                     "1",
 		"DATABASE_CONNECT_RETRY_COUNT":     "10",
 		"DATABASE_CONNECT_WAIT_INTERVAL":   "5",
@@ -27,11 +30,7 @@ func defaultEnvValues() map[string]string {
 		"DEMO_TOKENS":                      "LOCAL_TEST_TOKEN_1:1,LOCAL_TEST_TOKEN_2:2",
 		"LOGIN_DATABASE_URL":               "root:rootpw@tcp(database:3306)/remark?charset=utf8mb4&parseTime=True&loc=Local",
 		"LOGIN_PROVIDER":                   "DEX",
-		"PORT":                             "8080",
-		"SWAGGER_HOST":                     "localhost",
 		"SWAGGER_PATH":                     "/swagger",
-		"SWAGGER_PORT":                     "8080",
-		"SWAGGER_SCHEMA":                   "http",
 		"TEST_MODE":                        "false",
 	}
 }
