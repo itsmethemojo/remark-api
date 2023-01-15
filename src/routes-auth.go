@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 
 	"github.com/coreos/go-oidc/v3/oidc"
@@ -33,7 +34,7 @@ func randSeq(n int) string {
 func routeStartInit(c *gin.Context) {
 	// name, value string, maxAge int, path, domain string, secure, httpOnly bool
 	// 10 min
-	c.SetCookie("auth_state", randSeq(30), 600, "/", (EnvHelper).Get(EnvHelper{}, "APP_DOMAIN"), true, true)
+	c.SetCookie("auth_state", randSeq(30), 600, "/", os.Getenv("APP_DOMAIN"), true, true)
 
 	c.HTML(http.StatusOK, "start.tmpl", gin.H{
 		"title": "start authentification",
@@ -47,10 +48,10 @@ func routeStart(c *gin.Context) {
 	}
 
 	//TODO i think there is a function building this url
-	dex_uri := (EnvHelper).Get(EnvHelper{}, "DEX_URI")
-	dex_client_id := (EnvHelper).Get(EnvHelper{}, "DEX_CLIENT_ID")
-	dex_redirect_uri := (EnvHelper).Get(EnvHelper{}, "DEX_REDIRECT_URI")
-	dex_connector_id := (EnvHelper).Get(EnvHelper{}, "DEX_CONNECTOR_ID")
+	dex_uri := os.Getenv("DEX_URI")
+	dex_client_id := os.Getenv("DEX_CLIENT_ID")
+	dex_redirect_uri := os.Getenv("DEX_REDIRECT_URI")
+	dex_connector_id := os.Getenv("DEX_CONNECTOR_ID")
 	login_url := dex_uri + "/auth?client_id=" + url.QueryEscape(dex_client_id) + "&redirect_uri=" + url.QueryEscape(dex_redirect_uri) + "&connector_id=" + url.QueryEscape(dex_connector_id) + "&state=" + url.QueryEscape(auth_state) + "&response_type=code&scope=openid+profile+email"
 
 	c.Redirect(http.StatusFound, login_url)
@@ -69,20 +70,20 @@ func routeCallback(c *gin.Context) {
 		token *oauth2.Token
 	)
 
-	provider, err := oidc.NewProvider(context.Background(), (EnvHelper).Get(EnvHelper{}, "DEX_URI"))
+	provider, err := oidc.NewProvider(context.Background(), os.Getenv("DEX_URI"))
 	if err != nil {
 		panic(fmt.Sprintf("failed to get token: %v", err))
 	}
 
 	oauth2Config := oauth2.Config{
-		ClientID:     (EnvHelper).Get(EnvHelper{}, "DEX_CLIENT_ID"),
-		ClientSecret: (EnvHelper).Get(EnvHelper{}, "DEX_CLIENT_SECRET"),
+		ClientID:     os.Getenv("DEX_CLIENT_ID"),
+		ClientSecret: os.Getenv("DEX_CLIENT_SECRET"),
 		Endpoint:     provider.Endpoint(),
 		Scopes:       []string{"openid", "profile", "email"},
-		RedirectURL:  (EnvHelper).Get(EnvHelper{}, "DEX_REDIRECT_URI"),
+		RedirectURL:  os.Getenv("DEX_REDIRECT_URI"),
 	}
 
-	idTokenVerifier := provider.Verifier(&oidc.Config{ClientID: (EnvHelper).Get(EnvHelper{}, "DEX_CLIENT_ID")})
+	idTokenVerifier := provider.Verifier(&oidc.Config{ClientID: os.Getenv("DEX_CLIENT_ID")})
 
 	code := c.DefaultQuery("code", "")
 	if code == "" {
@@ -123,8 +124,8 @@ func routeCallback(c *gin.Context) {
 	}
 
 	// 30 days
-	c.SetCookie("auth_state", "", 0, "/", (EnvHelper).Get(EnvHelper{}, "APP_DOMAIN"), true, true)
-	c.SetCookie("Authorization", "Bearer "+rawIDToken, 2592000, "/", (EnvHelper).Get(EnvHelper{}, "APP_DOMAIN"), true, true)
+	c.SetCookie("auth_state", "", 0, "/", os.Getenv("APP_DOMAIN"), true, true)
+	c.SetCookie("Authorization", "Bearer "+rawIDToken, 2592000, "/", os.Getenv("APP_DOMAIN"), true, true)
 
 	c.String(http.StatusOK, "Bearer "+rawIDToken)
 	// redirect to FRONTEND_URI

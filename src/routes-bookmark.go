@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 )
 
 type CreateJSONResult struct {
@@ -24,7 +25,7 @@ func addBookmarkRoutes(rg *gin.RouterGroup) {
 	bookmarks.POST("/:id/", routeBookmarksEdit)
 	bookmarks.DELETE("/:id/", routeBookmarksDelete)
 
-	if (EnvHelper).Get(EnvHelper{}, "TEST_MODE") == "true" {
+	if os.Getenv("TEST_MODE") == "true" {
 		bookmarks.DELETE("/", routeBookmarksDeleteAllData)
 	}
 }
