@@ -1,0 +1,6 @@
+services:
+  app:
+    environment:
+      TEST_MODE: "true"
+      DEMO_TOKENS: "TEST_TOKEN_1:20,TEST_TOKEN_2:21"
+      LOGIN_PROVIDER: "DEMO_TOKEN"

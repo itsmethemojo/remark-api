@@ -46,6 +46,20 @@ func (this BookmarkRepository) InitializeDatabase() error {
 	return nil
 }
 
+func (this BookmarkRepository) DeleteAllData() error {
+	db, dbConnectError := this.getDB()
+	if dbConnectError != nil {
+		return dbConnectError
+	}
+
+	db.Exec("DELETE FROM bookmark_entities")
+	db.Exec("DELETE FROM remark_entities")
+	db.Exec("DELETE FROM click_entities")
+	db.Exec("DELETE FROM user_entities")
+
+	return nil
+}
+
 func (this BookmarkRepository) ListAll(userID uint64) (AllBookmarkData, error) {
 	db, dbConnectError := this.getDB()
 	if dbConnectError != nil {

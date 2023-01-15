@@ -23,6 +23,10 @@ func addBookmarkRoutes(rg *gin.RouterGroup) {
 	bookmarks.POST("/click/", routeBookmarksClick)
 	bookmarks.POST("/:id/", routeBookmarksEdit)
 	bookmarks.DELETE("/:id/", routeBookmarksDelete)
+
+	if (EnvHelper).Get(EnvHelper{}, "TEST_MODE") == "true" {
+		bookmarks.DELETE("/", routeBookmarksDeleteAllData)
+	}
 }
 
 // @Description get all bookmarks for user
@@ -147,6 +151,18 @@ func routeBookmarksDelete(c *gin.Context) {
 	}
 	b := BookmarkModel{}
 	modelError := b.Delete(userID, c.Param("id"))
+	if modelError != nil {
+		http_code := http.StatusInternalServerError
+		message := "Internal Server Error"
+		//TODO look up error message given to modifix http_code and message
+		c.JSON(http_code, map[string]string{"message": message})
+		return
+	}
+	c.JSON(http.StatusOK, map[string]string{"message": "ok"})
+}
+func routeBookmarksDeleteAllData(c *gin.Context) {
+	b := BookmarkModel{}
+	modelError := b.DeleteAllData()
 	if modelError != nil {
 		http_code := http.StatusInternalServerError
 		message := "Internal Server Error"

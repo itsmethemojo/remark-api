@@ -18,9 +18,12 @@ COPY go.mod go.sum /app/
 
 RUN go mod download
 
-#RUN ls -la /app
-#COPY *.go /app/
 COPY src /app/src
+
+#hack to add new packages
+#RUN cd /app && \
+#    go get github.com/coreos/go-oidc/v3/oidc && \
+#    cat go.mod go.sum
 
 RUN cd /app/src && \
     /swag init -g routes-init.go -o /usr/local/go/src/docs && \
@@ -30,6 +33,8 @@ RUN cd /app/src && \
 FROM $RUN_IMAGE
 
 COPY --from=build /app/remark-api /app/
+
+COPY templates /app/templates
 
 WORKDIR /app
 
