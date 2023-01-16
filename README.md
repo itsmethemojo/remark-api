@@ -68,7 +68,7 @@ docker-compose -f docker-compose.yml -f docker-compose-testing.yml up -d --build
 ## TODO
 
 1. improve test suite
-2. add github actions
+2. add github actions for tests
 3. check conneciton pooling https://gorm.io/docs/generic_interface.html#Connection-Pool
 4. improve naming of AllBookmarkData
 5. add debug logs
