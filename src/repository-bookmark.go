@@ -3,9 +3,7 @@ package main
 import (
 	"errors"
 	"github.com/antchfx/htmlquery"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"os"
 )
 
 type AllBookmarkData struct {
@@ -15,21 +13,11 @@ type AllBookmarkData struct {
 }
 
 type BookmarkRepository struct {
+	Database *gorm.DB
 }
 
 func (this BookmarkRepository) getDB() (*gorm.DB, error) {
-	dsn := "host=" + os.Getenv("DATABASE_HOST") +
-		" user=" + os.Getenv("DATABASE_USERNAME") +
-		" password=" + os.Getenv("DATABASE_PASSWORD") +
-		" dbname=" + os.Getenv("DATABASE_NAME") +
-		" port=" + os.Getenv("DATABASE_PORT") +
-		" sslmode=" + os.Getenv("DATABASE_SSLMODE") +
-		" TimeZone=" + os.Getenv("DATABASE_TIMEZONE")
-	db, connectError := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if connectError != nil {
-		return db, errors.New("could not connect to database")
-	}
-	return db, nil
+	return this.Database, nil
 }
 
 func (this BookmarkRepository) InitializeDatabase() error {
