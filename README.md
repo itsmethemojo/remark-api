@@ -8,8 +8,8 @@ the initial version was written in php [see](https://github.com/itsmethemojo/rem
 
 ## prequisites
 
-[go-task](https://github.com/go-task/task)
-[docker](https://www.docker.com/get-started)
+- [go-task](https://github.com/go-task/task)
+- [docker](https://www.docker.com/get-started)
 
 ## installation
 
@@ -67,17 +67,12 @@ docker-compose -f docker-compose.yml -f docker-compose-testing.yml up -d --build
 
 ## TODO
 
-1 improve test suite
-
-2 add github actions
-
-3 check conneciton pooling https://gorm.io/docs/generic_interface.html#Connection-Pool
-
-4 improve naming of AllBookmarkData
-
-5 add debug logs
-
-6 add dev/prod mode
+1. improve test suite
+2. add github actions
+3. check conneciton pooling https://gorm.io/docs/generic_interface.html#Connection-Pool
+4. improve naming of AllBookmarkData
+5. add debug logs
+6. add dev/prod mode
 
 ## extract available env parameters
 

@@ -1,0 +1,41 @@
+# this is needed because the docker image multi arch build seems not to work properly
+name: kaniko
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  kaniko:
+    runs-on: [ "self-hosted", "ARM64", "Linux" ]
+    container: ghcr.io/itsmethemojo/kaniko-github-actions-image:sha-27ca0d4
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+
+      # use custom checkout because default actions/checkout post cleanup will fail after kaniko wiping the container filesystem
+      - name: git checkout
+        run: >-
+          git clone "https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com/${IMAGE_NAME}.git" custom-clone &&
+          cd custom-clone &&
+          git checkout ${GITHUB_SHA} &&
+          git log -1
+
+
+      - name: kaniko build
+        run: >-
+          cd custom-clone &&
+          mkdir -p /kaniko/.docker &&
+          echo "{\"auths\":{\"${REGISTRY}\":{\"username\":\"${GITHUB_ACTOR}\",\"password\": \"${{ secrets.GITHUB_TOKEN }}\"}}}"  > /kaniko/.docker/config.json &&
+          /kaniko/executor
+          --context $(pwd)
+          --destination "${REGISTRY}/${IMAGE_NAME}:arm64-sha-${GITHUB_SHA}"
+          --destination "${REGISTRY}/${IMAGE_NAME}:arm64-sha-$(echo ${GITHUB_SHA} | cut -c -7)"
+
+        # use similar hash formats as standard docker build action
