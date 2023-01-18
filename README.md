@@ -50,6 +50,7 @@ the initial version was written in php [see](https://github.com/itsmethemojo/rem
 | DEX_CLIENT_SECRET | - | [see](https://dexidp.io/docs/connectors/github/#configuration) |
 | DEX_CONNECTOR_ID | - | [see](https://dexidp.io/docs/connectors/github/#configuration) |
 | DEX_URI | - | URI of the dex instance |
+| FRONTEND_URI | - | URI of the Application to open after login flow |
 | LOGIN_PROVIDER | `DEMO_TOKEN` | can be `DEX` or `DEMO_TOKEN` |
 | SWAGGER_PATH | `/swagger` | path where the swagger ui will be available |
 | TEST_MODE | `false` | if `true` an additional api route `DELETE /bookmark/` to clear the database is available, also env parameters will be dumped in startup log |
