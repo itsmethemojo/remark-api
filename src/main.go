@@ -11,10 +11,18 @@ import (
 )
 
 func main() {
-	err1 := godotenv.Load("default.env")
+	// read default values and only use them if it was not set otherwise
+	var defaultEnv map[string]string
+	defaultEnv, err1 := godotenv.Read("default.env")
 	if err1 != nil {
 		panic("default.env loading failed")
 	}
+	for key, defaultValue := range defaultEnv {
+		if os.Getenv(key) == "" {
+			os.Setenv(key, defaultValue)
+		}
+	}
+
 	err2 := godotenv.Overload()
 	if err2 != nil {
 		log.Printf("[INFO] no .env file present, skip loading")
@@ -23,7 +31,7 @@ func main() {
 	//TODO maybe this can be removed
 	if os.Getenv("TEST_MODE") == "true" {
 		for _, env := range os.Environ() {
-			log.Printf("[DEBUG] \"%v\" into uint64", env)
+			log.Printf("[DEBUG] %v", env)
 		}
 	}
 
