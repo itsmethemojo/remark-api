@@ -56,10 +56,15 @@ func RoutesRun() {
 		}
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}))
-	//TODO maybe use this to also host frontend
-	// router.Static("/static", "./static")
 
 	//define routes
+
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "healthy",
+		})
+	})
+
 	v1 := router.Group(base_path)
 	addBookmarkRoutes(v1)
 
