@@ -127,6 +127,9 @@ func routeCallback(c *gin.Context) {
 	c.SetCookie("auth_state", "", 0, "/", os.Getenv("APP_DOMAIN"), true, true)
 	c.SetCookie("Authorization", "Bearer "+rawIDToken, 2592000, "/", os.Getenv("APP_DOMAIN"), true, true)
 
-	c.String(http.StatusOK, "Bearer "+rawIDToken)
 	// redirect to FRONTEND_URI
+	c.HTML(http.StatusOK, "redirect.tmpl", gin.H{
+		"title":       "redirect to frontend",
+		"frontendUrl": os.Getenv("FRONTEND_URI"),
+	})
 }
