@@ -1,0 +1,63 @@
+app:
+  nameOverride: remark-api
+
+  image:
+    repository: ghcr.io/itsmethemojo/remark-api
+    tag: "sha-c2b84a7"
+
+  containerPort: 8080
+
+  livenessProbe:
+    httpGet:
+      path: /health
+
+  readinessProbe:
+    httpGet:
+      path: /health
+
+  env:
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    ACCESS_CONTROL_ALLOW_CREDENTIALS: ""
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    ACCESS_CONTROL_ALLOW_HEADERS: ""
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    ACCESS_CONTROL_ALLOW_METHODS: ""
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    ACCESS_CONTROL_ALLOW_ORIGIN: ""
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    API_PATH_PREFIX: ""
+    APP_DOMAIN: "localhost"
+    APP_PORT: "8080"
+    APP_SCHEMA: "http"
+    CORS_ENABLED: "1"
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    DATABASE_CONNECT_RETRY_COUNT: ""
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    DATABASE_CONNECT_WAIT_INTERVAL: ""
+    DATABASE_HOST: remark-api-database
+    DATABASE_NAME: remark-api
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    DATABASE_PORT: ""
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    DATABASE_SSLMODE: ""
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    DATABASE_TIMEZONE: ""
+    DATABASE_USERNAME: remark-api
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    DEMO_TOKENS: ""
+    # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
+    LOGIN_PROVIDER: ""
+    SWAGGER_PATH: "/swagger"
+    TEST_MODE: "false"
+
+postgresql:
+  # -- to use a separate deployed database set to false here
+  enabled: true
+  fullnameOverride: remark-api-database
+  primary:
+    persistence:
+      # -- for production use persistence should be enabled
+      enabled: false
+  auth:
+    database: remark-api
+    username: remark-api
