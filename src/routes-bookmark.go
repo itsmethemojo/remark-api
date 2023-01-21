@@ -56,7 +56,16 @@ func addBookmarkRoutes(rg *gin.RouterGroup) {
 // @router /bookmark/ [get]
 func routeBookmarks(c *gin.Context) {
 	a := AuthentificationModel{}
-	userID, authError := a.GetUserID(c.Request.Header.Get("Authorization"))
+	var cookieErr error
+	var authorizationData = c.Request.Header.Get("Authorization")
+	if authorizationData == "" {
+		authorizationData, cookieErr = c.Cookie("Authorization")
+	}
+	if cookieErr != nil {
+		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
+		return
+	}
+	userID, authError := a.GetUserID(authorizationData)
 	if authError != nil {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
@@ -82,7 +91,16 @@ func routeBookmarks(c *gin.Context) {
 // @router /bookmark/remark/ [post]
 func routeBookmarksRemark(c *gin.Context) {
 	a := AuthentificationModel{}
-	userID, authError := a.GetUserID(c.Request.Header.Get("Authorization"))
+	var cookieErr error
+	var authorizationData = c.Request.Header.Get("Authorization")
+	if authorizationData == "" {
+		authorizationData, cookieErr = c.Cookie("Authorization")
+	}
+	if cookieErr != nil {
+		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
+		return
+	}
+	userID, authError := a.GetUserID(authorizationData)
 	if authError != nil {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
@@ -107,7 +125,16 @@ func routeBookmarksRemark(c *gin.Context) {
 // @router /bookmark/click/ [post]
 func routeBookmarksClick(c *gin.Context) {
 	a := AuthentificationModel{}
-	userID, authError := a.GetUserID(c.Request.Header.Get("Authorization"))
+	var cookieErr error
+	var authorizationData = c.Request.Header.Get("Authorization")
+	if authorizationData == "" {
+		authorizationData, cookieErr = c.Cookie("Authorization")
+	}
+	if cookieErr != nil {
+		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
+		return
+	}
+	userID, authError := a.GetUserID(authorizationData)
 	if authError != nil {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
@@ -135,7 +162,16 @@ func routeBookmarksClick(c *gin.Context) {
 // @router /bookmark/{id}/ [post]
 func routeBookmarksEdit(c *gin.Context) {
 	a := AuthentificationModel{}
-	userID, authError := a.GetUserID(c.Request.Header.Get("Authorization"))
+	var cookieErr error
+	var authorizationData = c.Request.Header.Get("Authorization")
+	if authorizationData == "" {
+		authorizationData, cookieErr = c.Cookie("Authorization")
+	}
+	if cookieErr != nil {
+		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
+		return
+	}
+	userID, authError := a.GetUserID(authorizationData)
 	if authError != nil {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
@@ -162,7 +198,16 @@ func routeBookmarksEdit(c *gin.Context) {
 // @router /bookmark/{id}/ [delete]
 func routeBookmarksDelete(c *gin.Context) {
 	a := AuthentificationModel{}
-	userID, authError := a.GetUserID(c.Request.Header.Get("Authorization"))
+	var cookieErr error
+	var authorizationData = c.Request.Header.Get("Authorization")
+	if authorizationData == "" {
+		authorizationData, cookieErr = c.Cookie("Authorization")
+	}
+	if cookieErr != nil {
+		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
+		return
+	}
+	userID, authError := a.GetUserID(authorizationData)
 	if authError != nil {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
@@ -178,6 +223,7 @@ func routeBookmarksDelete(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, map[string]string{"message": "ok"})
 }
+
 func routeBookmarksDeleteAllData(c *gin.Context) {
 	b := BookmarkModel{database}
 	modelError := b.DeleteAllData()
