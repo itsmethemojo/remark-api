@@ -31,7 +31,7 @@ the initial version was written in php [see](https://github.com/itsmethemojo/rem
 | ACCESS_CONTROL_ALLOW_HEADERS | `Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With` | CORS Header |
 | ACCESS_CONTROL_ALLOW_METHODS | `POST,HEAD,PATCH, OPTIONS, GET, PUT` | CORS Header |
 | ACCESS_CONTROL_ALLOW_ORIGIN | `*` | CORS Header |
-| API_PATH_PREFIX | `""` | path prefix to host the api on a path like `/you/custom/path/v1/bookmarks` |
+| API_PATH_PREFIX | `"/api"` | path prefix to host the api on a path like `/you/custom/path/v1/bookmarks` |
 | APP_DOMAIN | `localhost` | web domain |
 | APP_PORT | `8080` | port of the webserver |
 | APP_SCHEMA | `http` | might be https or http |
