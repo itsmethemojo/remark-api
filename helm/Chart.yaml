@@ -2,7 +2,7 @@ apiVersion: v2
 name: remark-api
 description: A Helm chart to run remark-api in Kubernetes
 type: application
-version: 1.0.0
+version: 1.1.0
 icon: https://itsmethemojo.github.io/helm-charts/icon.png
 sources:
   - https://github.com/itsmethemojo/remark-api

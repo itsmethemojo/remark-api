@@ -3,7 +3,7 @@ app:
 
   image:
     repository: ghcr.io/itsmethemojo/remark-api
-    tag: "sha-c2b84a7"
+    tag: "sha-14338c4"
 
   containerPort: 8080
 
@@ -25,7 +25,7 @@ app:
     # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
     ACCESS_CONTROL_ALLOW_ORIGIN: ""
     # -- see [default.env](https://github.com/itsmethemojo/remark-api/blob/master/default.env)
-    API_PATH_PREFIX: ""
+    API_PATH_PREFIX: "api/"
     APP_DOMAIN: "localhost"
     APP_PORT: "8080"
     APP_SCHEMA: "http"
