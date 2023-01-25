@@ -6,11 +6,10 @@ fi
 
 # clean up data for tests
 
-curl -X DELETE localhost:8080/v1/bookmark/ 
+curl -s  -X DELETE localhost:8080/api/v1/bookmark/ 
 
 echo -e "\n\nall Data cleaned \n"
 
-TEST_USER_1="Authorization: TEST_TOKEN_1" \
-TEST_USER_2="Authorization: TEST_TOKEN_2" \
+TEST_USER_HEADER_PREFIX="Authorization: TEST_TOKEN_" \
 API_URI=http://localhost:8080 \
 bats-core/bin/bats tests/api.bats
