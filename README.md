@@ -29,7 +29,7 @@ the initial version was written in php [see](https://github.com/itsmethemojo/rem
 |------|---------|-------------|
 | ACCESS_CONTROL_ALLOW_CREDENTIALS | `true` | CORS Header |
 | ACCESS_CONTROL_ALLOW_HEADERS | `Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With` | CORS Header |
-| ACCESS_CONTROL_ALLOW_METHODS | `POST,HEAD,PATCH, OPTIONS, GET, PUT` | CORS Header |
+| ACCESS_CONTROL_ALLOW_METHODS | `POST,HEAD,PATCH, OPTIONS, GET, PUT, DELETE` | CORS Header |
 | ACCESS_CONTROL_ALLOW_ORIGIN | `*` | CORS Header |
 | API_PATH_PREFIX | `"/api"` | path prefix to host the api on a path like `/you/custom/path/v1/bookmarks` |
 | APP_DOMAIN | `localhost` | web domain |
@@ -51,6 +51,7 @@ the initial version was written in php [see](https://github.com/itsmethemojo/rem
 | DEX_CONNECTOR_ID | - | [see](https://dexidp.io/docs/connectors/github/#configuration) |
 | DEX_URI | - | URI of the dex instance |
 | FRONTEND_URI | - | URI of the Application to open after login flow |
+| LOGIN_ALLOWED_USERNAMES | `` | when using a login provider this list can limit access to specific usernames, will be ignored if empty |
 | LOGIN_PROVIDER | `DEMO_TOKEN` | can be `DEX` or `DEMO_TOKEN` |
 | SWAGGER_PATH | `/swagger` | path where the swagger ui will be available |
 | TEST_MODE | `false` | if `true` an additional api route `DELETE /bookmark/` to clear the database is available, also env parameters will be dumped in startup log |
