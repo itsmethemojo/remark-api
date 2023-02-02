@@ -1,4 +1,4 @@
-ARG BUILD_IMAGE=golang:1.18-buster
+ARG BUILD_IMAGE=golang:1.20-buster
 
 ARG RUN_IMAGE=gcr.io/distroless/base-debian11:latest
 
