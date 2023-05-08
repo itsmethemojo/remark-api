@@ -3,8 +3,8 @@ name: kaniko
 
 on:
   push:
-    branches:
-      - 'master'
+#    branches:
+#      - 'master'
 
 jobs:
   kaniko:

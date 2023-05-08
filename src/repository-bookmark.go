@@ -49,18 +49,24 @@ func (this BookmarkRepository) DeleteAllData() error {
 	return nil
 }
 
-func (this BookmarkRepository) ListAll(username string) (AllBookmarkData, error) {
+func (this BookmarkRepository) ListAll(username string, pagesize int) (AllBookmarkData, error) {
 	db, dbConnectError := this.getDB()
 	if dbConnectError != nil {
 		return AllBookmarkData{}, dbConnectError
 	}
 	userID := this.getUser(db, username)
 	var bookmarkEntities []BookmarkEntity
-	db.Where("user_id = ?", userID).Find(&bookmarkEntities)
 	var remarkEntities []RemarkEntity
-	db.Raw("SELECT r.id, r.bookmark_id, r.created_at FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ? ORDER BY r.id DESC", userID).Find(&remarkEntities)
 	var clickEntities []ClickEntity
-	db.Raw("SELECT c.id, c.bookmark_id, c.created_at FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ? ORDER BY c.id DESC", userID).Find(&clickEntities)
+	if pagesize == 0 {
+		db.Where("user_id = ?", userID).Find(&bookmarkEntities)
+		db.Raw("SELECT r.id, r.bookmark_id, r.created_at FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ? ORDER BY r.id DESC", userID).Find(&remarkEntities)
+		db.Raw("SELECT c.id, c.bookmark_id, c.created_at FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ? ORDER BY c.id DESC", userID).Find(&clickEntities)
+	} else {
+		db.Limit(pagesize).Where("user_id = ?", userID).Find(&bookmarkEntities)
+		db.Raw("SELECT r.id, r.bookmark_id, r.created_at FROM bookmark_entities b JOIN remark_entities r ON b.id = r.bookmark_id WHERE b.user_id = ? ORDER BY r.id DESC LIMIT ?", userID, pagesize).Find(&remarkEntities)
+		db.Raw("SELECT c.id, c.bookmark_id, c.created_at FROM bookmark_entities b JOIN click_entities c ON b.id = c.bookmark_id WHERE b.user_id = ? ORDER BY c.id DESC LIMIT ?", userID, pagesize).Find(&clickEntities)
+	}
 
 	allBookmarkData := AllBookmarkData{
 		Bookmarks: bookmarkEntities,

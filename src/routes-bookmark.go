@@ -70,8 +70,10 @@ func routeBookmarks(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, map[string]string{"message": "Unauthorized"})
 		return
 	}
+	// TODO  for now leave parsing to lower code
+	var pagesize = c.DefaultQuery("pagesize", "0")
 	b := BookmarkModel{database}
-	return_data, err := b.ListAll(userID)
+	return_data, err := b.ListAll(userID, pagesize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]string{"message": "something is wrong"})
 		return
