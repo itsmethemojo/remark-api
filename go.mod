@@ -3,7 +3,7 @@ module github.com/itsmethemojo/remark-api
 go 1.18
 
 require (
-        github.com/antchfx/htmlquery v1.2.4
+        github.com/antchfx/htmlquery v1.3.3
         github.com/gin-gonic/gin v1.7.7
         github.com/joho/godotenv v1.4.0
         github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
